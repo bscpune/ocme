@@ -1,0 +1,285 @@
+
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+<style type="text/css">
+ table, th , td  {
+  border: 2px solid #272424;
+  border-collapse: collapse;
+  padding: 1px;
+  vertical-align: middle!important;
+  column-width: 1000px!important;
+  align:center;
+  text-align: center!important;
+
+}
+table tr:nth-child(odd) {
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+} 
+
+.hide{display:none;}
+.btn {
+  display: inline-block;
+  padding: 4px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: #333333;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid #bbbbbb;
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  border-bottom-color: #a2a2a2;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
+</style>
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" dw-loading="loader">
+  <div class="panel panel-primary" >
+
+    <div class="panel-heading">
+     Material Consumption Approval
+   </div>
+
+   <div class="panel-body" ng-init="getMaterialConsumptionList();">
+    <div class="panel panel-info" ng-show="viewList">
+      <div class="row">
+        <br/>
+        <div class="col-xs-6 col-sm-6 col-md-9" style="padding-left: 20px;">
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label><i class="glyphicon glyphicon-search"></i>Search</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" name="Search" ng-model="searchKeyword" class="form-control"/>
+        </div>
+
+      </div>
+      <div class="small-top">
+
+        <div class="table-responsive" >
+          <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+            <thead>
+              <tr>     
+               
+                <th class="text-center">Material Consumption Code</th>
+                <th class="text-center">Contractor Name</th>
+                 <th class="text-center">Status</th>
+               
+              </tr>
+            </thead>
+            <tbody class="text-center">
+              <tr ng-repeat="consumption in consumptionList | filter: searchKeyword">     
+              
+                <td><a href="" ng-click="getMaterialConsumptionDetails(consumption.material_consumption_code);">{{consumption.material_consumption_code}}</a></td>
+                <td>{{consumption.contractor_name}}</td>
+               <td>{{consumption.approve_reject_status}}</td>
+              </tr>
+            </tbody>
+          </table>   
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+
+<div ng-show="viewUpdateField1">
+  <div class="panel panel-info">
+  <div class="row small-top" ng-init="">
+<div class="col-xs-6 col-sm-6 col-md-1">
+        <label>Material Consumption Code</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input class="form-control" ng-disabled="true" ng-model="consumptionheader.material_consumption_code" name="material_consumption_code"/>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-1" >
+      <label >Project Name</label>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-2" >
+     <input class="form-control" ng-disabled="true" ng-model="consumptionheader.project_name" name="project_name"/>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-1">
+      <label >Site Name</label>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-2" >
+    <input class="form-control" ng-disabled="true" ng-model="consumptionheader.site_name" name="store_name"/>
+    </div> </div>
+    <div class="row small-top" ng-init="">
+    <div class="col-xs-6 col-sm-6 col-md-1">
+      <label >Activity Name</label>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-2" >
+    <input class="form-control" ng-disabled="true" ng-model="consumptionheader.activity_name" name="store_name"/>
+    </div>
+      <div class="col-xs-6 col-sm-6 col-md-1" >
+        <label >Contractor Name</label>
+      </div>
+       <div class="col-xs-6 col-sm-6 col-md-2" >
+      <input class="form-control" ng-disabled="true" ng-model="consumptionheader.contractor_name" name="contractor_name"/>  
+      </div>
+       </div>
+<div class="row small-top" ng-init="">
+     
+    </div>
+    <br/>
+  <br/>
+    </div>
+    
+      <div ng-hide="addNewEntryForm">
+
+      <div class="col-xs-6 col-sm-6 col-md-9" style="padding-left: 20px;">
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label><i class="glyphicon glyphicon-search"></i>Search</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" name="Search" ng-model="searchKeyword"/>
+        </div> 
+          <table dt-options="dtOptions" class="table table-bordered">
+            <thead>
+              <tr>     
+                <th class="text-center">Sr No</th>
+                    <th class="text-center">Material Issue Number</th>
+                    <th class="text-center">Location Number</th>
+                    <th class="text-center">Material Number</th>                    
+                    <th class="text-center">Material Description</th>
+                    <th class="text-center">Issued Quantity</th>
+                    <th class="text-center">BOM Quantity</th>
+                     <th class="text-center">UOM</th>
+                    <th class="text-center">JMC Quantity</th>
+                    <th class="text-center">Actual Quantity</th>
+                      <th class="text-center">Balance Quantity</th>
+              </tr>
+            </thead>
+            <tbody class="text-center">
+              <tr ng-repeat="consumption in consumptionheaderList | filter: searchKeyword">    
+                    <td>{{$index+1}}</td>
+                     <td>{{consumption.material_issue_number}}</td>
+                    <td>{{consumption.loc_no}}</td>
+                     <td>{{consumption.material_name}}</td>
+                    <td>{{consumption.material_description}}</td>
+                   
+                    <td>{{consumption.issued_qty}}</td>
+                       <td><span >{{consumption.required}}</span></td>
+                       <td><span >{{consumption.unit_of_measurment}}</span></td>
+                        <td><span >{{consumption.jmc_quantity}}</span></td>
+                       <td><span >{{consumption.actual_quantity}}</span></td>
+                       <td ng-bind="consumption.issued_qty - consumption.actual_quantity"><span >{{consumption.balance_qty}}</span></td>
+
+                  </tr>            </tbody>
+          </table>   
+        </div>
+<div class="row small-top" style="margin-left: 300px;">
+             <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                  <label>Remark<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.remark.$invalid && !form2.remark.$pristine }">
+                  <TEXTAREA rows="3" cols="40"  type="text" style="width:400px" maxlength="30" name="remark" class="form-control" required ng-model="consumptionheader.remarks"/>
+                  <span ng-show="!form2.remark.$pristine && form2.remark.$invalid" class="help-block label">Remarks Required</span>
+                </div></div>
+                <hr>
+
+<div align="center">
+<button class="btn btn-primary" ng-disabled="consumptionheader.approve_reject_status == 'Approved'" ng-click="consumptionApproval()">Approve</button>
+<button class="btn btn-danger">Reject</button>
+<button class="btn btn-danger" ng-click="hideConsumptionForm();">Cancel</button>
+ <button class="btn btn-info"  ng-click="genrateMaterialconsumptionPDF(consumption.material_consumption_code);">Print</button>
+</div>
+
+       </div>
+       
+        </div>
+<script>
+  $(document).ready(function () {
+
+    $('#files').change(handleFile);
+  });
+
+  function handleFile(e) {
+
+   var result=[];
+
+        //Get the files from Upload control
+        var files = e.target.files;
+        var i, f;
+        //Loop through files
+        for (i = 0, f = files[i]; i != files.length; ++i) {
+          var reader = new FileReader();
+          var name = f.name;
+          reader.onload = function (e) {
+            var data = e.target.result;
+
+
+            var workbook = XLSX.read(data, { type: 'binary' });
+
+            var sheet_name_list = workbook.SheetNames;
+            sheet_name_list.forEach(function (y) { /* iterate through sheets */
+                    //Conveqrt the cell value to Json
+                    var roa = XLSX.utils.sheet_to_json(workbook.Sheets[y]);
+                    if (roa.length > 0) {
+                      result = roa;
+                    }
+                  });
+                //Get the first column first cell value
+
+                var col = [];
+                for (var i = 0; i < result.length; i++) {
+                  for (var key in result[i]) {
+                    if (col.indexOf(key) === -1) {
+                      col.push(key);
+                    }
+                  }
+                } 
+                var table = document.createElement("table");
+ var tr = table.insertRow(-1);                   // TABLE ROW.
+
+ for (var i = 0; i < col.length; i++) {
+            var th = document.createElement("th");      // TABLE HEADER.
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+          }
+
+          for (var i = 0; i < result.length; i++) {
+
+            tr = table.insertRow(-1);
+
+            for (var j = 0; j < col.length; j++) {
+              var tabCell = tr.insertCell(-1);
+              tabCell.innerHTML = result[i][col[j]];
+            }
+          }
+          var divContainer = document.getElementById("excelDataTable");
+          divContainer.innerHTML = "";
+          divContainer.appendChild(table);
+        };
+        reader.readAsArrayBuffer(f);
+
+
+      }
+    }  
+  </script>
+
+

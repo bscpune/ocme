@@ -1,0 +1,207 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" ng-hide="addStoreForm">
+  <div class="panel panel-info">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Stores Master
+        <button  class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.project_id.$pristine=true;
+                form2.store_address1.$pristine=true;
+                form2.store_location.$pristine=true;
+                form2.store_supervisor_name.$pristine=true;
+                form2.store_name.$pristine=true;
+                form2.state_name.$pristine=true;
+                form2.country_name.$pristine=true;
+                form2.city.$pristine=true;
+                showAddStoreForm();">
+        Add New Stores </button>
+      </div>
+    </div>
+    <div class="row small-top">
+    <div class="col-xs-6 col-sm-6 col-md-7">
+
+    </div>
+
+      </div>
+    <div class="row small-top table-responsive">
+      <fieldset class="scheduler-border contain" ng-init="getStoreList();" style="margin-right: 18px; margin-left: 15px;">
+        <table id="exportHODash" class="table table-bordered" border="1" fixed-header> 
+          <thead>
+            <tr>
+              <th class="text-center">Sr. No.</th>
+              <th class="text-center">Project Name<input type="text" name="project_name" tooltip="Enter Project Name" ng-model="search.project_name" class="form-control"/></th>
+              <th class="text-center">Store Name<input type="text" name="store_name" tooltip="Enter Store Name" ng-model="search.store_name" class="form-control"/></th>
+              <th class="text-center">Store Location<input type="text" name="store_location" tooltip="Enter Store Location" ng-model="search.store_location" class="form-control"/></th>
+              <th class="text-center">Store Address<input type="text" name="store_address1" tooltip="Enter Store Address" ng-model="search.store_address1" class="form-control"/></th>
+              <th class="text-center">City<input type="text" name="city" tooltip="Enter City" ng-model="search.city" class="form-control"/></th>
+              <th class="text-center">State<input type="text" name="state_name" tooltip="Enter State" ng-model="search.state_name" class="form-control"/></th>
+               <th class="text-center">Country<input type="text" name="country_name" tooltip="Enter Country" ng-model="search.country_name" class="form-control"/></th>
+              <th class="text-center">Store Supervisor Name<input type="text" name="store_supervisor_name" tooltip="Enter Store Supervisor Name" ng-model="search.store_supervisor_name" class="form-control"/></th>
+              <th class="text-center">Status<input type="text" name="active_status_display" tooltip="Enter Status" ng-model="search.active_status_display" class="form-control"/></th>
+              <th class="text-center">Action</th> 
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="store in storeList | filter: search">
+              <td>{{ $index + 1 }}</td>
+              <td>{{store.project_name}}</td>
+              <td>{{store.store_name}}</td>
+              <td>{{store.store_location}}</td>
+              <td>{{store.store_address1}}</td>
+              <td>{{store.city}}</td>
+              <td>{{store.state_name}}</td>
+              <td>{{store.country_name}}</td>
+              <td>{{store.store_supervisor_name}}</td>
+              <td>{{store.active_status_display}}</td>
+              <td><button class="btn btn-xs btn-info" ng-click="getStoreDetails(store.store_id);"><i class="glyphicon glyphicon-edit"></i></button>
+               <button id="active" class="btn btn-xs btn-success" ng-show="store.active_status==0;" ng-click="deleteStore(store.store_id,store.active_status);"><i class="glyphicon glyphicon-trash"></i></button>
+         <button id="deactive" class="btn btn-xs btn-danger"  ng-show="store.active_status==1;" ng-click="deleteStore(store.store_id,store.active_status);"><i class="glyphicon glyphicon-trash"></i></button></td>
+            </tr>
+          </tbody>
+        </table>   
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<div class="row" dw-loading="loader" ng-show="addStoreForm">
+  <div class="panel panel-primary" >
+    <div class="panel-heading" ng-show="addStoreData">
+      Add New Stores
+    </div>
+    <div class="panel-body">
+      <div class="panel panel-info">
+        <div class="panel-body">
+          <div  class="row" ng-init="getProjectNameList();getCountryList(); getSupervisorList()">
+            <form name="form2" class="form" novalidate>           
+              <fieldset>
+                <legend><font style="color: #0598DD;">Store Details</font></legend>
+                <div class="row small-top" style="margin-left: 10px;">
+                  <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                    <label >Project Name<span style="color:red">*</span></label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+                    <select class="form-control" required name='project_id' type="text" ng-model="store.project_id" ng-options="s.project_id as s.project_name for s in projectNameList | orderBy : 'project_name'"></select>
+                    <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">project Name Required</span>
+                  </div>
+
+                  <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                    <label >Store Name<span style="color:red">*</span></label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.store_name.$invalid && !form2.store_name.$pristine }">
+                    <input type="text" maxlength="20" required name="store_name" ng-model="store.store_name" class="form-control">
+                    <span ng-show="!form2.store_name.$pristine && form2.store_name.$invalid" class="help-block label">Store Name Required</span>
+                  </div>
+    
+                  <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                    <label >Store Location<span style="color:red">*</span></label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.store_location.$invalid && !form2.store_location.$pristine }">
+                    <input type="text" maxlength="20" required name="store_location" ng-model="store.store_location" class="form-control">
+                    <span ng-show="!form2.store_location.$pristine && form2.store_location.$invalid" class="help-block label">Store Location Required</span>
+                  </div>
+                  </div>
+                  <div class="row small-top" style="margin-left: 10px;">
+                  <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                    <label >Address<span style="color:red">*</span></label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2 col-lg-7" ng-class="{ 'has-error' : form2.store_address1.$invalid && !form2.store_address1.$pristine }">
+                    <input  maxlength="45" style="width:95%"  type="text" required name="store_address1" ng-model="store.store_address1" class="form-control"/>
+                    <span ng-show="!form2.store_address1.$pristine && form2.store_address1.$invalid" class="help-block label">Address Required</span>
+                  </div>
+                   <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                  <label >Country<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.country_name.$invalid && !form2.country_name.$pristine }">
+             <input type="text" class="form-control" required ng-model="store.country_name" name="country_name" tooltip="Country" typeahead="s.country_name as s.country_name for s in countryList| filter:$viewValue" typeahead-min-length='1'  typeahead-on-select='getStateList(store.country_name);'/>  
+                  <span ng-show="!form2.country_name.$pristine && form2.country_name.$invalid" class="help-block label">Country Required</span>
+                   </div>
+        
+                        </div>
+
+                  <div class="row small-top" style="margin-left: 10px;">                
+                    <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                    </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2 col-lg-7">
+                    <input  maxlength="45" style="width:95%" type="text" name="address2" class="form-control" ng-model="store.address2"/>
+                    </div>
+                               <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                  <label >State<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.state_name.$invalid && !form2.state_name.$pristine }">
+                  <select class="form-control" required name='state_name' type="text" ng-model="store.state_name" ng-options="s.state_name as s.state_name for s in stateList | orderBy : 'state_name'"></select>
+                  <span ng-show="!form2.state_name.$pristine && form2.state_name.$invalid" class="help-block label">State Required</span>
+                   </div>
+                    </div>
+
+                  <div class="row small-top" style="margin-left: 10px;">             
+                  <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                  </div>
+                   <div class="col-xs-6 col-sm-6 col-md-2 col-lg-7">
+                     <input style="width:95%"  type="text" maxlength="30" name="address3" class="form-control" ng-model="store.address3"/>
+                  </div>
+
+                  <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                    <label>City<span style="color:red">*</span></label>
+                  </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.city.$invalid && !form2.city.$pristine }">
+                        <input class="form-control" type="text" name="city" maxlength="20" ng-model="store.city" required>
+                          <span ng-show="!form2.city.$pristine && form2.city.$invalid" class="help-block label">City Required</span>
+                    </div>
+
+</div>
+                  <div class="row small-top" style="margin-left: 10px;">
+
+
+                   <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                    <label >Store Supervisor Name<span style="color:red">*</span></label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.store_supervisor_name.$invalid && !form2.store_supervisor_name.$pristine }">
+                    <select class="form-control" required name='store_supervisor_name' type="text" ng-model="store.store_supervisor_name" ng-options="s.store_supervisor_name as s.store_supervisor_name for s in supervisorNameList | orderBy : 'store_supervisor_name'"></select>
+                    <span ng-show="!form2.store_supervisor_name.$pristine && form2.store_supervisor_name.$invalid" class="help-block label">Store Supervisor Name Required</span>
+                  </div>
+                  
+              </div>
+
+              </fieldset>
+            </form>
+
+            <div class="row" >
+              <div align="center">
+                <h2></h2>
+                <button ng-show="addStoreDataUpdate" class="btn btn-primary" ng-click="
+                form2.project_id.$pristine=false;
+                form2.store_address1.$pristine=false;
+                form2.store_location.$pristine=false;
+                form2.store_supervisor_name.$pristine=false;
+                form2.store_name.$pristine=false;
+                form2.state_name.$pristine=false;
+                 form2.country_name.$pristine=false;
+                form2.city.$pristine=false;
+                saveStore(!form2.$invalid);">Submit</button>
+                <button ng-hide="addStoreDataUpdate" class="btn btn-primary"
+                ng-click="form2.project_id.$pristine=false;
+                form2.store_address1.$pristine=false;
+                form2.store_location.$pristine=false;
+                form2.store_supervisor_name.$pristine=false;
+                form2.store_name.$pristine=false;
+                form2.state_name.$pristine=false;
+                form2.country_name.$pristine=false;
+                form2.city.$pristine=false;
+                updateStore(!form2.$invalid);">Update</button>
+                <button class="btn btn-danger" ng-click="hideAddStoreForm();">Cancel</button>
+              </div>
+            </div><br>
+          </div>      
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

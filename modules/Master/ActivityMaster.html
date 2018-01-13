@@ -1,0 +1,127 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" ng-hide="addActivityForm">
+<div class="panel panel-info">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      Activity Master
+      <button  class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="  form2.activity_name.$pristine=true;
+          showAddActivityForm();">
+      Add New Activity </button>
+    </div>
+  </div>
+  <div class="row small-top">
+    <div class="col-xs-6 col-sm-6 col-md-7">
+      <!--<button class="btn btn-link" ng-click="exportToExcel('#table','CustomerDetailsFile')">
+      <span class="fa fa-file-excel-o"></span>Export to Excel
+      </button>
+    </div>-->
+    </div>
+
+     <div class="col-xs-6 col-sm-6 col-md-1">
+        <label>Search By</label>
+      </div>
+       <div class="col-xs-6 col-sm-6 col-md-2">
+        <select class="form-control" ng-model="columns" ng-options="e for e in headers" ng-click="getValue8();">
+        </select>
+      </div>
+       <div class="col-xs-6 col-sm-6 col-md-2">
+      <input type="text" name="Search" ng-model="search[columns]" placeholder="Search Here" class="form-control"/>
+      </div>
+      </div>
+  <div class="row small-top table-responsive">
+  <fieldset class="scheduler-border contain" ng-init="getActivityList();" style="margin-right: 18px; margin-left: 15px;">
+    <table id="exportHODash" class="table table-bordered" border="1" fixed-header> 
+      <thead>
+        <tr>
+          <th class="text-center">Sr. No.</th>
+          <th class="text-center">Activity Code</th>
+          <th class="text-center">Activity Name</th>
+           <th class="text-center">Status</th>
+
+          <th class="text-center">Action</th>   
+       </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="activity in activityList | filter: search">
+          <td>{{ $index + 1 }}</td>
+          <td>{{activity.activity_code}}</td>
+          <td>{{activity.activity_name}}</td>
+           <td>{{activity.active_status_display}}</td>
+          <td><button class="btn btn-xs btn-info" ng-click="getActivityDetails(activity.activity_id);"><i class="glyphicon glyphicon-edit"></i></button>
+         <!--  <button class="btn btn-xs btn-danger" ng-click="deleteActivity(activity.activity_id);"><i class="glyphicon glyphicon-trash"></button></td> -->
+
+            <button id="active" class="btn btn-xs btn-success" ng-show="activity.active_status==0;" ng-click="deleteActivity(activity.activity_id,activity.active_status);"><i class="glyphicon glyphicon-trash"></i></button>
+         <button id="deactive" class="btn btn-xs btn-danger"  ng-show="activity.active_status==1;" ng-click="deleteActivity(activity.activity_id,activity.active_status);"><i class="glyphicon glyphicon-trash"></i></button></td>
+        </tr>
+      </tbody>
+    </table>   
+  </fieldset>
+  </div>
+</div>
+</div>
+
+<div class="row" dw-loading="loader" ng-show="addActivityForm">
+  <div class="panel panel-primary" >
+    <div class="panel-heading" ng-show="addActivityData">
+      Add New Activity
+    </div>
+    <div class="panel-heading" ng-hide="addActivityData">
+      Update Activity
+    </div>
+
+    <div class="panel-body">
+    <div class="panel panel-info">
+    <div class="panel-body">
+
+    <div  class="row" ng-init="getProjectNameList();getSiteLocationList();">
+      <form name="form2" class="form" novalidate>           
+        <fieldset>
+          <legend><font style="color: #0598DD;">Activity Details</font></legend>
+          <div class="row small-top" style="margin-left: 10px;">
+    
+            <div class="col-xs-6 col-sm-6 col-md-1">
+              <label >Acivity Code<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2">
+              <input type="text" readonly name="activity_code" ng-model="activity.activity_code" class="form-control"/>
+            </div>
+            
+            <div class="col-xs-6 col-sm-6 col-md-1">
+              <label >Acivity Name<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.activity_name.$invalid && !form2.activity_name.$pristine }">
+              <input type="text" maxlength="11" required name="activity_name" ng-model="activity.activity_name" class="form-control">
+              <span ng-show="!form2.activity_name.$pristine && form2.activity_name.$invalid" class="help-block label">Acivity Name Required</span>
+            </div>
+            </div>
+
+        </fieldset>
+      
+      <div class="row" >
+        <div  align="center">
+          <h2></h2>
+          <button ng-show="addActivityData" class="btn btn-primary" ng-click="
+          form2.activity_name.$pristine=false;
+          saveActivity(!form2.$invalid);">Submit</button>
+          <button ng-hide="addActivityData"  class="btn btn-primary" ng-click="
+          form2.activity_name.$pristine=false;
+           updateActivity(!form2.$invalid);">Update</button>
+          <button class="btn btn-danger" ng-click="hideAddActivityForm();">Cancel</button>
+        </div>
+      </div><br>
+      </form>
+
+    </div>        
+    </div>
+    </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,255 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" ng-hide="addCustomerForm">
+  <div class="panel panel-info">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Customer Master
+        <button  class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.customer_name.$pristine=true;
+        form2.address1.$pristine=true;
+        form2.state_name.$pristine=true;
+        form2.country_name.$pristine=true;
+        form2.contact_person.$pristine=true;
+        form2.contact_no.$pristine=true;
+        form2.pan_no.$pristine=true;
+         form2.city.$pristine=true;showAddCustomerForm();">
+        Add New Customer </button>
+      </div>
+    </div>
+    <div class="row small-top">
+      <div class="col-xs-6 col-sm-6 col-md-7">
+
+      </div>
+
+    </div>
+
+    <div class="row small-top table-responsive">
+
+      <fieldset class="scheduler-border contain" ng-init="getCustomerList();" style="margin-right: 18px; margin-left: 15px;">
+
+        <table id="exportHODash" dt-options="dtOptions" class="table table-bordered" border="1" fixed-header> 
+          <thead>
+            <tr>
+              <th class="text-center">Sr. No.</th>
+              <th class="text-center">Customer Code<input type="text" name="customer_code" tooltip="Enter Customer Code" ng-model="search.customer_code" class="form-control"/></th>
+              <th class="text-center">Sap Customer Code<input type="text" name="customer_sap_code" tooltip="Enter Sap Customer Code" ng-model="search.customer_sap_code" class="form-control"/></th>
+              <th class="text-center">Customer Name<input type="text" name="customer_name"  ng-model="search.customer_name" class="form-control"/></th>                
+              <th class="text-center">Address<input type="text" name="address1"  ng-model="search.address1" class="form-control"/></th> 
+               <th class="text-center">Country<input type="text" name="country_name"  ng-model="search.country_name" class="form-control"/></th>          
+              <th class="text-center">State<input type="text" name="state_name"  ng-model="search.state_name" class="form-control"/></th>
+              <th class="text-center">City<input type="text" name="city"  ng-model="search.city" class="form-control"/></th>
+              <th class="text-center">Pin Code<input type="text" name="pin_code"  ng-model="search.pin_code" class="form-control"/></th>
+              <th class="text-center">GSTIN No.<input type="text" name="gst_no"  ng-model="search.gst_no" class="form-control"/></th></th>
+              <th class="text-center">PAN No.<input type="text" name="pan_no"  ng-model="search.pan_no" class="form-control"/></th>
+              <th class="text-center">Contact Person<input type="text" name="contact_person"  ng-model="search.contact_person" class="form-control"/></th>
+              <th class="text-center">Contact No.<input type="text" name="contact_no"  ng-model="search.contact_no" class="form-control"/></th>
+              <th class="text-center">Email ID<input type="text" name="email_id"  ng-model="search.email_id" class="form-control"/></th>
+              <th class="text-center">Status<input type="text" name="active_status_display"  ng-model="search.active_status_display" class="form-control"/></th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="customer in customerList | filter: search">
+              <td>{{ $index + 1 }}</td>
+              <td>{{customer.customer_code}}</td>
+              <td>{{customer.customer_sap_code}}</td>
+              <td>{{customer.customer_name}}</td>
+              <td>{{customer.address1}}</td>
+              <td>{{customer.country_name}}</td>
+              <td>{{customer.state_name}}</td>
+              <td>{{customer.city}}</td>
+              <td>{{customer.pin_code}}</td>
+              <td>{{customer.gst_no}}</td>
+              <td>{{customer.pan_no}}</td>
+              <td>{{customer.contact_person}}</td>
+              <td>{{customer.contact_no}}</td>
+              <td>{{customer.email_id}}</td>
+              <td>{{customer.active_status_display}}</td>
+     <td><button class="btn btn-xs btn-info" ng-click="getCustomerDetails(customer.customer_id);"><i class="glyphicon glyphicon-edit"></i></button>
+    <button id="active" class="btn btn-xs btn-success" ng-show="customer.active_status==0;" ng-click="deleteCustomer(customer.customer_id,customer.active_status);"><i class="glyphicon glyphicon-trash"></i></button>
+    <button id="deactive" class="btn btn-xs btn-danger"  ng-show="customer.active_status==1;" ng-click="deleteCustomer(customer.customer_id,customer.active_status);"><i class="glyphicon glyphicon-trash"></i></button></td>
+            </tr>
+          </tbody>
+        </table>   
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<div class="panel panel-primary" ng-show="addCustomerForm">
+  <div class="panel-heading" ng-show="addCustomerData">
+    Add New Customer
+  </div>
+  <div class="panel-heading" ng-hide="addCustomerData">
+    Update Customer
+  </div>
+  <div class="panel-body">
+  <div class="panel panel-info">
+  <div class="panel-body">
+
+    <div class="row" ng-init="getCountryList();">
+      <form name="form2" class="form" novalidate>           
+        <fieldset>
+          <legend><font style="color: #0598DD;">Customer Details</font></legend>
+          <div class="row small-top" style="margin-left: 10px;">
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label>Customer code<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3">
+              <input style=" text-align: left; " type="text" name="customer_code" ng-model="customer.customer_code" class="form-control" readonly/>
+            </div>
+              <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label >SAP Customer Code</label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3">
+              <input type="text"  name="customer_sap_code" readonly ng-model="customer.customer_sap_code" class="form-control">
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label >Customer Name<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.customer_name.$invalid && !form2.customer_name.$pristine }">
+              <input type="text" required name="customer_name" maxlength="30" ng-model="customer.customer_name" class="form-control">
+              <span ng-show="!form2.customer_name.$pristine && form2.customer_name.$invalid" class="help-block label">Customer Name Required</span>
+            </div>
+          
+            </div>
+
+          <div class="row small-top" style="margin-left: 10px;">
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label>Address<span style="color:red">*</span></label>
+            </div>
+              <div class="col-xs-6 col-sm-6 col-md-2 col-lg-7" ng-class="{ 'has-error' : form2.address1.$invalid && !form2.address1.$pristine }">
+              <input  type="text" maxlength="45" name="address1" style="width:95%" class="form-control" required ng-model="customer.address1"/>
+              <span ng-show="!form2.address.$pristine && form2.address1.$invalid" class="help-block label">Address Required</span>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                  <label >Country<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.country_name.$invalid && !form2.country_name.$pristine }">
+             <input type="text" class="form-control" required ng-model="customer.country_name" name="country_name" tooltip="Country" typeahead="s.country_name as s.country_name for s in countryList| filter:$viewValue" typeahead-min-length='1'  typeahead-on-select='getStateList(customer.country_name);'/>  
+                  <span ng-show="!form2.country_name.$pristine && form2.country_name.$invalid" class="help-block label">Country Required</span>
+                   </div> 
+
+
+</div>
+
+          <div class="row small-top" style="margin-left: 10px;">
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+            </div>
+              <div class="col-xs-6 col-sm-6 col-md-2 col-lg-7">
+              <input  type="text" maxlength="45" name="address2" style="width:95%" class="form-control" ng-model="customer.address2"/>
+            </div>
+              <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                  <label >State<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.state_name.$invalid && !form2.state_name.$pristine }">
+                  <select class="form-control" required name='state_name' type="text" ng-model="customer.state_name" ng-options="s.state_name as s.state_name for s in stateList | orderBy : 'state_name'"></select>
+                  <span ng-show="!form2.state_name.$pristine && form2.state_name.$invalid" class="help-block label">State Required</span>
+                </div>                      
+            </div>
+
+          <div class="row small-top" style="margin-left: 10px;">
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+            </div>
+              <div class="col-xs-6 col-sm-6 col-md-2 col-lg-7">
+              <input  type="text" name="address3" style="width:95%" maxlength="45" class="form-control" ng-model="customer.address3"/>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label>City<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.city.$invalid && !form2.city.$pristine }">
+              <input class="form-control" type="text" maxlength="20" name="city" ng-model="customer.city" required>
+              <span ng-show="!form2.city.$pristine && form2.city.$invalid" class="help-block label">City Required</span>
+            </div>
+         
+</div>
+<div class="row small-top" style="margin-left: 10px;">
+         <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label>Pin Code</label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" >
+              <input class="form-control" type="text" onkeypress="return isNumberKey(event)" maxlength="6" name="pin_code" ng-model="customer.pin_code" />
+            </div> 
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label>PAN No.<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3"ng-class="{ 'has-error' : form2.pan_no.$invalid && !form2.pan_no.$pristine }">
+              <input class="form-control" name="pan_no" required type="text" maxlength="10" ng-model="customer.pan_no"/>
+              <span ng-show="!form2.pan_no.$pristine && form2.pan_no.$invalid" class="help-block label">Pan No Required</span>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label>GSTIN No.</label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" >
+              <input class="form-control" type="text" maxlength="15" name="gst_no" ng-model="customer.gst_no"/>
+          </div>
+          </div>
+          <div class="row small-top" style="margin-left: 10px;">
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label>Contact Person<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.contact_person.$invalid && !form2.contact_person.$pristine }">
+              <input class="form-control" name="contact_person" required maxlength="25" type="text" ng-model="customer.contact_person">
+              <span ng-show="!form2.contact_person.$pristine && form2.contact_person.$invalid" class="help-block label">Contact Person Required</span>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label >Contact No.<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.contact_no.$invalid && !form2.contact_no.$pristine }">
+              <input class="form-control" name="contact_no" required type="text" maxlength="15" ng-model="customer.contact_no" maxlength="10" onkeypress="return isNumberKey(event)">
+              <span ng-show="!form2.contact_no.$pristine && form2.contact_no.$invalid" class="help-block label">Contact No Required</span>
+            </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label >Email ID</label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3">
+              <input class="form-control" name="email_id" type="text" maxlength="30" ng-model="customer.email_id">
+            </div>
+
+          </div>
+
+
+        </fieldset>
+   
+
+      <div class="row" >
+      <div align="center">
+        <h2></h2>
+        <button ng-if="addCustomerData" class="btn btn-primary"
+        ng-click="form2.customer_name.$pristine=false;
+        form2.address1.$pristine=false;
+        form2.state_id.$pristine=false;
+        form2.contact_person.$pristine=false;
+        form2.contact_no.$pristine=false;
+        form2.pan_no.$pristine=false;
+         form2.city.$pristine=false;
+         saveCustomer(!form2.$invalid);">Submit</button>
+        <button ng-if="updateCustomerData" class="btn btn-info"
+        ng-click="form2.customer_name.$pristine=false;
+        form2.address1.$pristine=false;
+        form2.state_id.$pristine=false;
+        form2.contact_person.$pristine=false;
+        form2.contact_no.$pristine=false;
+        form2.pan_no.$pristine=false;
+         form2.city.$pristine=false;
+         updateCustomer(!form2.$invalid);">Update</button>
+        <button class="btn btn-danger" ng-click="hideAddCustomerForm();">Cancel</button>
+      </div>
+      </div></br>
+         </form>
+    </div>
+
+  </div>
+  </div>
+  </div>
+</div>

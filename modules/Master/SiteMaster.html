@@ -1,0 +1,185 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" ng-hide="addSiteForm">
+  <div class="panel panel-info">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Site Master
+        <button  class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.project_id.$pristine=true;
+        form2.store_id.$pristine=true;
+        form2.site_name.$pristine=true;
+        form2.site_location.$pristine=true;
+        form2.site_engineer_name.$pristine=true;
+        showAddSiteForm();">
+        Add New Site </button>
+      </div>
+    </div>
+    <div class="row small-top">
+    <div class="col-xs-6 col-sm-6 col-md-7" ng-init="">
+      <!--<button class="btn btn-link" ng-click="exportToExcel('#table','CustomerDetailsFile')">
+      <span class="fa fa-file-excel-o"></span>Export to Excel
+      </button>
+    </div>-->
+    </div>
+   
+    <!--  <div class="col-xs-6 col-sm-6 col-md-1">
+        <label>Search By</label>
+      </div>
+       <div class="col-xs-6 col-sm-6 col-md-2">
+        <select class="form-control" ng-model="columns" ng-options="e for e in headers" ng-click="getValue1()">
+        </select>
+      </div>
+       <div class="col-xs-6 col-sm-6 col-md-2">
+      <input type="text" name="Search" ng-model="search[columns]" placeholder="Search Here" class="form-control"/>
+      </div> -->
+      </div>
+    <div class="row small-top table-responsive">
+      <fieldset class="scheduler-border contain" ng-init="getSiteList();" style="margin-right: 18px; margin-left: 15px;">
+        <table id="exportHODash" class="table table-bordered" border="1" fixed-header> 
+          <thead>
+            <tr>
+              <th class="text-center">Sr. No.</th>
+              <th class="text-center">Project Name<input type="text" name="project_name" tooltip="Enter Project Name" ng-model="search.project_name" class="form-control"/></th>
+               <th class="text-center">Store Name<input type="text" name="store_name" tooltip="Enter Store Name" ng-model="search.store_name" class="form-control"/></th>
+              <th class="text-center">Site Name<input type="text" name="site_name" tooltip="Enter Site Name" ng-model="search.site_name" class="form-control"/></th>
+              <th class="text-center">Site Location<input type="text" name="site_location" tooltip="Enter Site Location" ng-model="search.site_location" class="form-control"/></th>
+              <th class="text-center">Site Engineer Name<input type="text" name="site_engineer_name" tooltip="Enter Site Engineer Name" ng-model="search.site_engineer_name" class="form-control"/></th>
+              <th class="text-center">Status<input type="text" name="active_status_display" tooltip="Enter Status" ng-model="search.active_status_display" class="form-control"/></th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="site in siteList1 | filter: search" ng-init='showReff=checkReferenceIDpaymentSite(site.project_id)'>
+              <td>{{ $index + 1 }}</td>
+              <td><span ng-show='showReff'>{{site.project_name}}</td>
+               <td><span ng-show='showReff'>{{site.store_name}}</td>
+              <td>{{site.site_name}}</td>
+              <td>{{site.site_location}}</td>
+              <td>{{site.site_engineer_name}}</td>
+              <td>{{site.active_status_display}}</td>
+              <td><span ng-show='showReff'><button class="btn btn-xs btn-info"  ng-click="getSiteDetails(site.project_id,site.store_id);"><i class="glyphicon glyphicon-edit"></i></button></td>
+             <td><button id="active" class="btn btn-xs btn-success" ng-show="site.active_status==0;" ng-click="deleteSite(site.site_id,site.active_status);"><i class="glyphicon glyphicon-trash"></i></button>
+         <button id="deactive" class="btn btn-xs btn-danger"  ng-show="site.active_status==1;" ng-click="deleteSite(site.site_id,site.active_status);"><i class="glyphicon glyphicon-trash"></i></button>
+
+                </td> 
+            </tr>
+          </tbody>
+        </table>   
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<div class="row" dw-loading="loader" ng-show="addSiteForm">
+  <div class="panel panel-primary" >
+    <div class="panel-heading" ng-show="addSiteData">
+      Add New Site
+    </div>
+    
+    <div class="panel-body">
+      <div class="panel panel-info">
+        <div class="panel-body">
+
+        <div  class="row" ng-init="getProjectNameList();getSiteEngineerName();">
+          <form name="form2" class="form" novalidate>           
+            <fieldset>
+              <legend><font style="color: #0598DD;">Site Details</font></legend>
+              <div class="row small-top" style="margin-left: 10px;">
+                <div class="col-xs-6 col-sm-6 col-md-1 clo-lg-1">
+                  <label >Project Name<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 clo-lg-3" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+                  <select class="form-control" required name='project_id' type="text" ng-model="project.project_id" ng-options="s.project_id as s.project_name for s in projectNameList | orderBy : 'project_name'" ng-change="getProjectCode1(project.project_id);getStoreName(project.project_id);"></select>
+                  <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">project Name Required</span>
+                </div>
+                   <div class="col-xs-6 col-sm-6 col-md-1 clo-lg-1">
+                  <label >Store Name<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 clo-lg-3" ng-class="{ 'has-error' : form2.store_id.$invalid && !form2.store_id.$pristine }">
+                  <select class="form-control" required name='store_id' type="text" ng-model="project.store_id" ng-options="s.store_id as s.store_name for s in storeNameList | orderBy : 'store_name'" ></select>
+                  <span ng-show="!form2.store_id.$pristine && form2.store_id.$invalid" class="help-block label">Store Name Required</span>
+                </div>
+
+                 <div class="col-xs-6 col-sm-6 col-md-1 clo-lg-1">
+                  <label>Project Number<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 clo-lg-3">
+                  <input type="text" name="project_code" ng-disabled="true" ng-model="project.project_code" class="form-control">
+                </div>
+              </div>
+
+               <div class="table-responsive small-top" ng-init="">
+              <table id="exportCreateIndent" class="table table-striped table-bordered" border="1">
+                <thead>
+                  <tr style="float: center;background-color: #CFD8DC;">     
+                    <th class="text-center">Sr No</th>
+                    <th class="text-center">Site Name</th>
+                    <th class="text-center">Site Location</th>
+                    <th class="text-center">Site Engineer Name</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">  
+                  <tr ng-show="addSiteData">            
+                    <td></td>
+                    <td><input type="text" name="site_name" maxlength="20" ng-model="site.site_name" class="form-control">
+                    <span ng-show="!form2.site_name.$pristine && form2.site_name.$invalid" class="help-block label">Site Name Required</span></td>                   
+                    <td><input type="text" maxlength="20"  name="site_location" ng-model="site.site_location" class="form-control">
+                    <span ng-show="!form2.site_location.$pristine && form2.site_location.$invalid" class="help-block label">Site Location Required</span></td>
+                    <td><select class="form-control" type="text" ng-model="site.site_engineer_name" ng-options="s.site_engineer_name as s.site_engineer_name for s in siteNameList | orderBy : 'site_engineer_name'" typeahead-min-length="1"></select>
+                    </td>    
+                    <td><button ng-disabled="!site.site_name || !site.site_location" type="submit" data-ng-click="addSiteName();" class="btn btn-info btn-xs"><span>Add</span></button></td>  
+                            
+                  </tr>
+
+                  <tr ng-repeat="site in siteList | filter: search">
+                    <td>{{$index+1}}</td>
+                    <td><span data-ng-hide="editMode">{{site.site_name}}</span>
+                    <input type="text" name="site_name" data-ng-show="editMode" maxlength="20" data-ng-model="site.site_name" class="form-control">
+                    </td>
+                    <td> <span data-ng-hide="editMode">{{site.site_location}}</span>
+                    <input type="text" maxlength="20" data-ng-show="editMode" name="site_location" data-ng-model="site.site_location" class="form-control"></td>
+                    <td><span data-ng-hide="editMode">{{site.site_engineer_name}}</span>
+                      <select class="form-control" type="text" ng-options="s.site_engineer_name as s.site_engineer_name for s in siteNameList | orderBy : 'site_engineer_name'" data-ng-model="site.site_engineer_name" data-ng-show="editMode"> 
+                    </select></td>
+                    <td>
+                      <button class="btn btn-xs btn-warning" data-ng-hide="editMode" data-ng-click="editMode = true; editAppKey(entry)">Edit</button>
+                      <button type="submit" data-ng-show="editMode" data-ng-click="editMode = false;" class="btn btn-success btn-xs"><span >Update</span></button>
+                      <button class="btn btn-xs btn-danger" ng-click="deleteSiteName($index)">Delete</button></td>
+                  </tr>
+                </tbody>
+              </table>   
+            </div>
+            </fieldset>
+          </form>
+
+          <div class="row" >
+            <div  align="center">
+              <h2></h2>
+              <button ng-show="addSiteData" class="btn btn-primary" ng-click="form2.project_id.$pristine=false;form2.site_name.$pristine=false;
+              form2.site_location.$pristine=false;
+              form2.store_id.$pristine=false;
+              form2.site_engineer_name.$pristine=false;
+              saveSite(!form2.$invalid);">Submit</button>
+              <button ng-hide="addSiteData" class="btn btn-primary"
+              ng-click="form2.project_id.$pristine=false;
+              form2.store_id.$pristine=false;
+              form2.site_name.$pristine=false;
+              form2.site_location.$pristine=false;
+              form2.site_engineer_name.$pristine=false;updateSite(!form2.$invalid);">Update</button>
+              <button class="btn btn-danger" ng-click="hideAddSiteForm();">Cancel</button>
+            </div>
+          </div><br>
+        </div>
+        </div>         
+      </div>
+    </div>
+  </div>
+</div>

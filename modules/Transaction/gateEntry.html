@@ -1,0 +1,308 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary" >
+
+  <div class="panel-heading">
+   Gate Entry
+    <button class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.constraction_name.$pristine=true;form2.inventory_type.$pristine=true;form2.reference_no.$pristine=true;form2.vehicle_no.$pristine=true;form2.challan.$pristine=true;form2.lr_no.$pristine=true;addNewGateEntry();getGateEntryCode();" ng-hide="addNewEntryForm">New Entry</button>
+  </div>
+
+  <div class="panel-body" ng-init="getGateEntryList();">
+  <div class="panel panel-info" ng-hide="addNewEntryForm">
+    <div class="row">
+      <br/>
+    <div class="col-xs-6 col-sm-6 col-md-9" style="padding-left: 20px;">
+    </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+        <label><i class="glyphicon glyphicon-search"></i>Search</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input type="text" name="Search" ng-model="searchKeyword" class="form-control"/>
+      </div>
+      
+  </div>
+  <div class="small-top">
+
+    <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+        <thead>
+          <tr>     
+            <th class="text-center">Sr No</th>
+            <th class="text-center">Gate Entry No.</th>
+            <th class="text-center">Entry Date</th>
+            <th class="text-center">Transporter Name</th>
+            <th class="text-center">Vehicle No.</th>
+            <th class="text-center">Challan No.</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Outward Time</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr ng-repeat="entry in gateEntryList | filter: searchKeyword">     
+          <td>{{$index+1}}</td>  
+          <td><a href="" ng-click="getgateEntryDetailsView(entry.gate_entry_id);">{{entry.gate_entry_code}}</a></td>
+          <td>{{entry.gate_entry_date}}</td>
+          <td>{{entry.transporter_name}}</td>
+          <td>{{entry.vehicle_no}}</td>
+          <td>{{entry.challan_no}}</td>
+          <td>{{entry.status}}</td>
+          <td><button class="btn btn-info btn-xs" ng-if="entry.status=='In Progress'" type="submit" ng-click="getgateEntryDetailsView1(entry.gate_entry_id);">Outward Time</button></td>     
+          </tr>
+        </tbody>
+      </table>   
+    </div>
+    
+  </div>
+  </div>
+  </div>
+
+
+
+  <!-- <div class="panel-heading" ng-show="addNewEntryForm">
+   New Entry
+  </div>
+ -->
+  <div class="panel-body" ng-show="addNewEntryForm">
+  <div class="panel panel-info">
+    <form name="form2" class="form" novalidate>
+      <div class="row small-top" style="margin-left: 10px;" ng-init="">
+
+      <fieldset>
+          <legend><font style="color: #0598DD;">Gate Entry Details</font></legend>
+        <div class="row small-top" style="margin-left: 10px;">
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Gate Entry No.</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" class="form-control" ng-model="gateEntry.gate_entry_code" ng-disabled="true" name="business_place"/>
+        </div>
+
+          
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Entry Date</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" class="form-control" ng-model="gateEntry.gate_entry_date" ng-disabled="true" name="business_place"/>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Transporter Name<span style="color:red">*</span>:</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.constraction_name.$invalid && !form2.constraction_name.$pristine }">
+          <input type="text" class="form-control" required ng-model="gateEntry.transporter_name" name="constraction_name" ng-disabled="viewUpdateButton || updateField"/>
+          <span ng-show="!form2.constraction_name.$pristine && form2.constraction_name.$invalid" class="help-block label">Transporter Name Required</span>  
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label >Gate Entry Type<span style="color:red">*</span></label>
+         </div>
+         <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.gate_entry_type.$invalid && !form2.gate_entry_type.$pristine }">
+          <select class="form-control" ng-model="gateEntry.gate_entry_type" ng-disabled="viewUpdateButton || updateField" required name="gate_entry_type" ng-change=getReferenceNoList(gateEntry.gate_entry_type);>
+                     <option value="1">Material Issue</option>
+                     <option value="2">Indent</option>
+                     <option value="3">Inward Material</option>
+                     <option value="4">Other</option>
+          </select>
+          <span ng-show="!form2.gate_entry_type.$pristine && form2.gate_entry_type.$invalid" class="help-block label">Inventory Type Required</span>   
+        </div>   
+
+         <!-- <div class="col-xs-6 col-sm-6 col-md-1">
+          <label >Inventory Type<span style="color:red">*</span></label>
+         </div>
+         <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.inventory_type.$invalid && !form2.inventory_type.$pristine }">
+          <select class="form-control" ng-model="gateEntry.inventory_type" ng-disabled="viewUpdateButton || updateField" required name="inventory_type" >
+                     <option>Emco Stock</option>
+                     <option>Customer Stock</option>
+                     <option>T&P Stock</option>
+                     <option>OSM Stock</option>
+          </select>
+          <span ng-show="!form2.inventory_type.$pristine && form2.inventory_type.$invalid" class="help-block label">Inventory Type Required</span>   
+        </div> -->
+       
+     </div>
+
+  <div class="row small-top" ng-init="" style="margin-left: 10px;">
+       
+
+        
+        <div class="col-xs-6 col-sm-6 col-md-1" ng-if="gateEntry.gate_entry_type === '4'">
+          <label>Enter Gate Entry Type:</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2" ng-if="gateEntry.gate_entry_type === '4'">
+          <textarea type="text" class="form-control" required ng-model="issue.remark" name="constraction_name" ng-disabled="viewUpdateButton || updateField"></textarea>
+        </div>
+
+      <div class="col-xs-6 col-sm-6 col-md-1" ng-if="gateEntry.gate_entry_type != '4'">
+          <label>Reference No.</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.reference_no.$invalid && !form2.reference_no.$pristine }" ng-init="" ng-if="gateEntry.gate_entry_type != '4'">
+          <input type="text" class="form-control" required ng-model="gateEntry.reference_number" name="reference_no"
+          placeholder="Enter Reference Number" typeahead="cp.reference_number as cp.reference_number for cp in referenceNoLIst | filter:$viewValue" typeahead-min-length='1' ng-disabled="viewUpdateButton || updateField" typeahead-on-select='getReferenceMaterialList(gateEntry.reference_number);getIssueMaterialList(gateEntry.reference_number);getIndentMaterialList(gateEntry.reference_number);'/>
+          <span ng-show="!form2.reference_no.$pristine && form2.reference_no.$invalid" class="help-block label">Reference No. Required</span>  
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getProjectNameList();">
+                <label >Project Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.indent_date.$invalid && !form2.indent_date.$pristine }">
+                <select class="form-control" required name='project_id' type="text" ng-model="gateEntry.project_id" ng-options="i.project_id as i.project_name for i in projectNameList | orderBy : 'project_name'" ng-change=getManagerName(indent.project_id); ng-disabled="viewUpdateButton || updateField"></select>
+                <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">Project Name Required</span>
+       </div>   
+             <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getStoreNameList();">
+                <label >Store Name<span style="color:red">*</span></label>
+       </div>
+      <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.indent_date.$invalid && !form2.indent_date.$pristine }">
+                <select class="form-control" required name='project_id' type="text" ng-model="gateEntry.store_id" ng-options="i.store_id as i.store_name for i in storeNameList | orderBy : 'project_name'" ng-change=getManagerName(indent.project_id); ng-disabled="viewUpdateButton || updateField"></select>
+                <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">Store Name Required</span>
+       </div>
+        <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getContractorList();">
+                <label >Contractor Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.contractor_id.$invalid && !form2.contractor_id.$pristine }">
+                <select class="form-control" required name='contractor_id' type="text" ng-model="gateEntry.contractor_id" ng-options="i.contractor_id as i.contractor_name for i in contractorList | orderBy : 'contractor_name'" ng-disabled="viewUpdateButton || updateField"></select>
+                <span ng-show="!form2.contractor_id.$pristine && form2.contractor_id.$invalid" class="help-block label">Contractor Name Required</span>
+       </div>   
+  </div>
+
+  <div class="row small-top" ng-init="" style="margin-left: 10px;">
+      
+     
+
+      <div class="col-xs-6 col-sm-6 col-md-1">
+          <label >Inward Time<span style="color:red">*</span></label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" class="form-control" ng-disabled="true" ng-model="gateEntry.time_in" /> 
+      </div>
+
+      <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Outward Time</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" class="form-control" ng-model="gateEntry.time_out" disabled/>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Vehicle No.<span style="color:red">*</span>:</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.reference_no.$invalid && !form2.reference_no.$pristine }">
+          <input type="text" class="form-control" ng-disabled="viewUpdateButton || updateField" required ng-model="gateEntry.vehicle_no" name="vehicle_no"/>
+          <span ng-show="!form2.vehicle_no.$pristine && form2.vehicle_no.$invalid" class="help-block label">Vehicle No. Required</span>                        
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+            <label >Challan No.<span style="color:red">*</span></label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.reference_no.$invalid && !form2.reference_no.$pristine }">
+            <input type="text" class="form-control" required ng-model="gateEntry.challan_no" ng-disabled="viewUpdateButton || updateField" name="challan"/>
+            <span ng-show="!form2.challan.$pristine && form2.challan.$invalid" class="help-block label">Challan No. Required</span>
+           </div>
+  </div>
+  <div class="row small-top" style="margin-left: 10px;">
+   
+       
+      <div class="col-xs-6 col-sm-6 col-md-1">
+          <label >LR No.<span style="color:red">*</span></label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.lr_no.$invalid && !form2.lr_no.$pristine }">
+          <input type="text" class="form-control" ng-model="gateEntry.lr_no" name="lr_no" ng-disabled="viewUpdateButton || updateField" required />
+           <span ng-show="!form2.lr_no.$pristine && form2.lr_no.$invalid" class="help-block label">LR No. Required</span> 
+      </div>
+
+     
+  </div>
+    <div class="table-responsive small-top" ng-init="getMaterialCodeList();" ng-if="gateEntry.gate_entry_type != '4'">
+      <table id="exportCreateIndent" class="table table-striped table-bordered" border="1">
+        <thead>
+        <tr style="float: center;background-color: #CFD8DC;">     
+          <th class="text-center">Sr No</th>
+          <th class="text-center">Material Number</th>
+          <th class="text-center">Material Description</th>
+          <th class="text-center">Unit Price</th>
+          <th class="text-center">Quantity</th>
+       </tr>
+        </thead>
+        <tbody class="text-center">
+        <tr ng-repeat="ind in ReferenceMaterialList">
+          <td>{{$index+1}}</td>
+          <td>{{ind.material_code}}</td>
+          <td>{{ind.material_description}}</td>
+          <td>{{ind.net_value | number:2}}</td>
+          <td>{{ind.billing_quantity}}</td>
+        </tr>
+        </tbody>
+      </table>   
+    </div>
+    <div class="table-responsive small-top" ng-init="getMaterialCodeList();" ng-if="gateEntry.gate_entry_type === '4'">
+      <table id="exportCreateIndent" class="table table-striped table-bordered" border="1">
+        <thead>
+        <tr style="float: center;background-color: #CFD8DC;">     
+          <th class="text-center">Sr No</th>
+          <th class="text-center">Material Code</th>
+          <th class="text-center">Material Description</th>
+          <th class="text-center">Material Price</th>
+          <th class="text-center">Quantity</th>
+          <th class="text-center">Add</th>
+       </tr>
+        </thead>
+        <tbody class="text-center">
+               <tr ng-show="addNewEntryForm" ng-init="getMaterialCodeList();">            
+                    <td></td>
+                    <td><select class="form-control" type="text" ng-model="indentMaterial.material_code" ng-options="v.material_code as v.material_code for v in materialCodeList | orderBy : 'material_code'" ng-change="getMaterialCodeDetails(indentMaterial.material_code);"  width="50%"></select></td>
+                    <!-- <td>{{indentMaterial.material_name}}</td> -->
+
+                    <!-- <td><input class="form-control" type="text" ng-model="indentMaterial.material_code" ng-change="getMaterialCodeDetails(indentMaterial.material_code);" ng-class="{ error: !indentMaterial.material_code }"/></td> -->
+                    <!-- <td>{{indentMaterial.unit_of_measurment}}</td> -->
+                    <td>{{indentMaterial.material_description}}</td>
+                    <td>{{indentMaterial.net_value}}</td>
+                    <td><input class="form-control table-input" type="number" ng-model="indentMaterial.billing_quantity" name="quantity" min="1" ng-class="{ error: !indentMaterial.quantity }" onkeypress="return isNumberKey(event)"/></td>
+                  
+                  
+                    <td><button ng-disabled="!indentMaterial.material_code || !indentMaterial.material_description || !indentMaterial.quantity || !indentMaterial.unit_of_measurment" type="submit" data-ng-click="addIndentMaterial();" class="btn btn-info btn-xs"><span>Add</span></button></td>
+
+                     
+                  </tr>
+
+                  <tr ng-repeat="ind in ReferenceMaterialList">
+                    <td>{{$index+1}}</td>
+                    <td>{{ind.material_code}}</td>                
+                    <td>{{ind.material_description}}</td>
+                    <td>{{ind.net_value}}</td>  
+                    <td>{{ind.billing_quantity}}</td>  
+                    <td><span data-ng-hide="editMode">{{ind.quantity}}</span>
+                      <input class="form-control table-input" type="text" data-ng-model="ind.quantity" data-ng-show="editMode" data-ng-required onkeypress="return isNumberKey(event)"/></td>
+                    
+                    <td ng-show="addNewIndentData"><button class="btn btn-xs btn-danger" ng-click="deleteIndentMaterial($index)">Delete</button></td>
+
+                    <td ng-hide="addNewIndentData"><button class="btn btn-info btn-xs" type="submit" data-ng-click="editMode = true; editAppKey(entry)">Edit</button></td>
+                  </tr>
+        </tbody>
+      </table>   
+    </div>
+
+    <div class="row" >
+    <div align="center">
+      <h2></h2>
+      <button class="btn btn-primary" ng-hide="viewUpdateButton"
+      ng-click="form2.constraction_name.$pristine=false;form2.inventory_type.$pristine=false;form2.reference_no.$pristine=false;form2.vehicle_no.$pristine=false;form2.challan.$pristine=false;form2.lr_no.$pristine=false;saveGateEntry(!form2.$invalid);">Submit</button>
+      <button class="btn btn-info"  ng-click="genrateGateentryPDF(gateEntry.gate_entry_id);">GenratePDF</button>
+      <button class="btn btn-primary" ng-show="viewUpdateButton"
+      ng-click="form2.constraction_name.$pristine=false;form2.inventory_type.$pristine=false;form2.reference_no.$pristine=false;form2.vehicle_no.$pristine=false;form2.challan.$pristine=false;form2.lr_no.$pristine=false;updateOutwardTime(!form2.$invalid);">Update Outward Time</button>
+      <!-- <button class="btn btn-primary"
+      ng-click="form2.indent_date.$pristine=false;form2.dept_id.$pristine=false;form2.total_quantity.$pristine=false;form2.indent_type.$pristine=false;updateIndent(!form2.$invalid);">Update</button> -->
+      <button class="btn btn-danger" ng-click="hideAddEntryForm();">Cancel</button>
+    </div>
+  </div>
+
+  </form>
+  
+  </div>
+  </div>
+
+</div>
+</div>

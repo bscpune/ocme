@@ -1,0 +1,229 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary">  
+  <div class="panel-heading" ng-hide="addMTNForm">
+    Material Transfer Note (MTN)
+    <button  class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.transfer_date.$pristine=true;
+                form2.transfer_type.$pristine=true;
+                form2.s_project_id.$pristine=true;
+                form2.s_store_id.$pristine=true;
+                form2.d_project_id.$pristine=true;
+                form2.d_store_id.$pristine=true;
+                showAddMTNForm();">New Material Transfer Note</button>
+  </div>
+    
+  <div class="panel-body" ng-init="getMTNList();">
+  <div class="panel panel-info" ng-hide="addMTNForm">
+
+    <div class="row">
+      <br/>
+      <div class="col-xs-6 col-sm-6 col-md-9" style="padding-left: 20px;">
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-1">
+        <label><i class="glyphicon glyphicon-search"></i>Search</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input type="text" name="Search" ng-model="searchKeyword" class="form-control"/>
+      </div>
+    </div>
+
+    <div class="small-top">
+    <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+        <thead>
+          <tr>
+            <th class="text-center" rowspan="2">Sr No</th>
+            <th class="text-center" rowspan="2">Material Transfer Code<input type="text" name="transfer_code" placeholder="Enter Material Transfer Code" ng-model="search.transfer_code" class="form-control"/></th>
+            <th class="text-center" rowspan="2">Transfer Date<input type="text" name="transfer_date" placeholder="Enter Transfer Date" ng-model="search.transfer_date" class="form-control"/></th>
+            <th class="text-center" rowspan="2">Transfer Type<input type="text" name="transfer_type" placeholder="Enter Transfer Type" ng-model="search.transfer_type" class="form-control"/></th>
+            <th class="text-center" colspan="3">Source Info</th>
+            <th class="text-center" colspan="3">Destination Info</th>
+          </tr>
+          <tr>
+            <th>Project Name<input type="text" name="s_project_name" placeholder="Enter Source Project Name" ng-model="search.s_project_name" class="form-control"/></th>
+            <th>Store Name<input type="text" name="s_store_name" placeholder="Enter Source Store Name" ng-model="search.s_store_name" class="form-control"/></th>
+            <th>Contractor Name<input type="text" name="s_contractor_name" placeholder="Enter Source Contractor Name" ng-model="search.s_contractor_name" class="form-control"/></th>
+            <th>Project Name<input type="text" name="d_project_name" placeholder="Enter Destination Project Name" ng-model="search.d_project_name" class="form-control"/></th>
+            <th>Store Name<input type="text" name="d_store_name" placeholder="Enter Destination Project Name" ng-model="search.d_store_name" class="form-control"/></th>
+            <th>Contractor Name<input type="text" name="d_contractor_name" placeholder="Enter Destination Project Name" ng-model="search.d_contractor_name" class="form-control"/></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="mtn in mtnSourceList | filter: search" >            
+            <td>{{$index+1}}</td>
+            <td><a href="" ng-click="getMtnDetails(mtn.mtn_id);">{{mtn.transfer_code}}</a></td>
+            <td>{{mtn.transfer_date}}</td>
+            <td>{{mtn.transfer_type}}</td>
+            <td>{{mtn.s_project_name}}</td>
+            <td>{{mtn.s_store_name}}</td>
+            <td>{{mtn.s_contractor_name}}</td>
+            <td>{{mtn.d_project_name}}</td>
+            <td>{{mtn.d_store_name}}</td>
+            <td>{{mtn.d_contractor_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </div>
+  </div>
+
+    
+  <div class="panel-heading" ng-show="addMTNForm">
+    New Material Transfer Note
+  </div>
+  <div class="panel-body" ng-show="addMTNForm">
+    <div class="panel panel-info">
+    <form name="form2" class="form" novalidate>
+        <div class="row small-top" ng-init="">
+          <fieldset>
+            <legend><font style="color: #0598DD;">Material Transfer Note Details</font></legend>
+            <div class="row small-top" style="margin-left: 10px;">
+              <div class="col-xs-6 col-sm-6 col-md-1">
+                <label>Material Transfer Note No<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2">
+                <input type="text" maxlength="14" name="transfer_code" ng-model="mtn.transfer_code" class="form-control" readonly/>
+              </div>
+
+              <div class="col-xs-6 col-sm-6 col-md-1">
+                <label>Material Transfer Note Date<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.transfer_date.$invalid && !form2.transfer_date.$pristine }">
+                <div class="datepicker" date-format="dd-MM-yyyy"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                  <input ng-model="mtn.transfer_date" required placeholder="dd-MM-yyyy" type="text" class="form-control angular-datepicker-input" name="transfer_date" ng-disabled="supplier"/>
+                  <span ng-show="!form2.transfer_date.$pristine && form2.transfer_date.$invalid" class="help-block label">Material Transfer Note Date Required</span>
+                </div>
+              </div>
+
+              <div class="col-xs-6 col-sm-6 col-md-1">
+               <label>Material Transfer Type<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.transfer_type.$invalid && !form2.transfer_type.$pristine }">
+                <select class="form-control" required name='transfer_type' ng-select="showType();" type="text" ng-model="mtn.transfer_type" ng-dropdown>
+                  <option ng-option value="Contractor To Contractor">Contractor to Contractor</option>
+                  <option ng-option value="Store to Store">Store to Store</option>
+                  <option ng-option value="Project to Project">Project to Project</option>
+                </select>
+                <span ng-show="!form2.transfer_type.$pristine && form2.transfer_type.$invalid" class="help-block label">Please Select Material Transfer Type</span>
+              </div>
+
+
+              <div class="col-xs-6 col-sm-6 col-md-1">
+                <label >SAP Invoice Number</label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2"  >
+                <input ng-model="mtn.sap_invoice_number"  maxlength="14" type="text" class="form-control angular-datepicker-input" name="sap_invoice_number" />
+              </div>
+            </div>
+
+            
+            <div class="row small-top" style="margin-left: 10px;">
+              <legend><font style="color: #0598DD;">Material Transfer Details for Source</font></legend>
+
+              <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getProjectNameList();">
+                <label >Project Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.s_project_id.$invalid && !form2.s_project_id.$pristine }">
+                <select class="form-control" required name='s_project_id' type="text" ng-model="mtn.s_project_id" ng-options="s.project_id as s.project_name for s in projectNameList | orderBy : 'project_name'" ng-change="getStoreName(mtn.s_project_id);" ng-disabled="viewUpdateButton || updateField"></select>
+                <span ng-show="!form2.s_project_id.$pristine && form2.s_project_id.$invalid" class="help-block label">Project Name Required</span>
+              </div>
+              
+              <div class="col-xs-6 col-sm-6 col-md-1" ng-init="">
+                <label >Store Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2"  ng-class="{ 'has-error' : form2.s_project_id.$invalid && !form2.s_project_id.$pristine }">
+                <select class="form-control" required name='s_store_id' type="text" ng-model="mtn.s_store_id" ng-options="i.store_id as i.store_name for i in storeName | orderBy : 'store_name'" ng-change="getMaterialData(mtn.s_store_id);"></select>
+                <span ng-show="!form2.s_store_id.$pristine && form2.s_store_id.$invalid" class="help-block label">Store Name Required</span>
+
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getContractorName();">
+              <label ng-if="mtn.transfer_type=='Contractor To Contractor'">Contractor Name</label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-if="mtn.transfer_type=='Contractor To Contractor'">
+                <select class="form-control" name='contractor_id' type="text" ng-model="mtn.s_contractor_id" ng-options="i.contractor_id as i.contractor_name for i in contractorName | orderBy : 'contractor_name'" ng-change="getTransferData(mtn.s_contractor_id,mtn.s_store_id);"></select>
+              </div> 
+
+            </div>
+
+
+            <div class="row small-top" style="margin-left: 10px;">
+              <legend><font style="color: #0598DD;">Material Transfer Details for Destination</font></legend>
+              <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getProjectNameList();">
+                <label >Project Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.d_project_id.$invalid && !form2.d_project_id.$pristine }">
+                <select class="form-control" required name='d_project_id' type="text" ng-model="mtn.d_project_id" ng-options="d.project_id as d.project_name for d in projectNameList | orderBy : 'project_name'" ng-change="getStoreName1(mtn.d_project_id);"></select>
+                <span ng-show="!form2.d_project_id.$pristine && form2.d_project_id.$invalid" class="help-block label">Project Name Required</span>
+              </div>
+
+              <div class="col-xs-6 col-sm-6 col-md-1" ng-init="">
+                <label >Store Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.d_store_id.$invalid && !form2.d_store_id.$pristine }">
+                <select class="form-control" required name='d_store_id' type="text" ng-model="mtn.d_store_id" ng-options="i.store_id as i.store_name for i in storeName1 | orderBy : 'store_name'"></select>
+                <span ng-show="!form2.d_store_id.$pristine && form2.d_store_id.$invalid" class="help-block label">Store Name Required</span>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getContractorName1();">
+                <label ng-if="mtn.transfer_type=='Contractor To Contractor'">Contractor Name</label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-if="mtn.transfer_type=='Contractor To Contractor'">
+                <select class="form-control" name='contractor_id' type="text" ng-model="mtn.d_contractor_id" ng-options="i.contractor_id as i.contractor_name for i in contractorName1 | orderBy : 'contractor_name'" ng-disabled="viewUpdateButton || updateField"></select>
+              </div>
+              </div>      
+            <div class="table-responsive small-top" ng-init="">
+              <table id="exportmaterial" class="table table-striped table-bordered" border="1">
+                <thead>
+                  <tr style="float: center;background-color: #CFD8DC;">     
+                    <th class="text-center">Sr No</th>
+                    <th class="text-center">Material No.</th>
+                    <th class="text-center">Material Description</th>
+                    <th class="text-center">UOM</th>
+                    <th class="text-center">Issue Quantity</th>
+                    <th class="text-center">Transfer Quantity</th>
+                    <th class="text-center">Remark</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  <tr ng-repeat="mtn in storeData">
+                    <td>{{$index+1}}</td>
+                    <td>{{mtn.material_number}}</td>
+                    <td>{{mtn.material_description}}</td>
+                    <td>{{mtn.unit_of_measurment}}</td>
+                    <td>{{mtn.issued_qty}}</td>
+                    <td><input class="form-control table-input" type="text" ng-model="mtn.transfer_quantity" onkeypress="return isNumberKey(event)"/></td>
+                    <td><input class="form-control" type="text" ng-model="mtn.remark"/></td>
+                  </tr>
+                </tbody>
+              </table>   
+            </div>
+
+            <div class="row" >
+              <div align="center">
+                <button ng-show="addMTNData" class="btn btn-primary"
+                ng-click="form2.transfer_date.$pristine=false;
+                form2.transfer_type.$pristine=false;
+                form2.s_project_id.$pristine=false;
+                form2.s_store_id.$pristine=false;
+                form2.d_project_id.$pristine=false;
+                form2.d_store_id.$pristine=false;
+                saveMaterialTransferNote();">Submit</button>
+                <button class="btn btn-info"  ng-click="genrateMaterialtransfernotePDF(issue.contractor_inventory_id);">Print</button>
+                <button class="btn btn-danger" ng-click="hideAddMTNForm();">Cancel</button>
+              </div>
+           </div>
+           </fieldset>
+           </div>
+           </form>
+           </div>
+           </div>
+           </div>
+           

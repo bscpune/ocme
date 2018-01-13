@@ -1,0 +1,198 @@
+<section class="sidebar"> 
+  <!--HO sidebar  -->
+  <ul class="sidebar-menu" ng-init="setCollapse();">
+
+    <li ng-class="{active: collapseVar==1}"  >{{dropDown}}
+      <a href="" ng-click="check(1)">Dashboard</a>
+      <ul class="nav nav-second-level" collapse="collapseVar!=1">
+        <li ui-sref-active="active">
+          <a ui-sref="home.UserDash"> <strong>Dashboard</strong></a>
+        </li>
+ <li ui-sref-active="active"  >
+          <a ui-sref="home.AddRole">Add New Role<i class="fa fa-cogs pull-right"></i></a>
+        </li>
+        <li ui-sref-active="active"  >
+          <a ui-sref="home.AddUserList">Add New User<i class="fa fa-cogs pull-right"></i></a>
+        </li>
+      </ul>
+    </li>
+
+    <li ng-class="{active: collapseVar==2}" >         
+      <a href="" ng-hide="masterdata == '0'"  ng-click="check(2)">Master Data<i class="fa fa-bullhorn pull-right"></i></a>
+      <ul class="nav nav-second-level" collapse="collapseVar!=2"  >
+        <li ui-sref-active="active"  >
+          <a ui-sref="home.ProjectMaster">Project Master</a>
+        </li>
+         <li ui-sref-active="active"  >
+          <a ui-sref="home.StoresMaster">Stores Master</a>
+        </li>
+        <li ui-sref-active="active"  >
+          <a ui-sref="home.SiteMaster">Site Master</a>
+        </li>
+       
+        <li ui-sref-active="active">
+          <a ui-sref="home.StorageLocationMaster" >Storage Location Master</a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="home.MasterMaterial" >Material Master</a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="home.VendorMaster" >Vendor Master</a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="home.CustomerMaster" >Customer Master</a>
+        </li>
+        <li ui-sref-active="active"  >
+          <a ui-sref="home.ContractorMaster">Contractor Master</a>
+        </li>
+
+
+        <li ui-sref-active="active">
+          <a ui-sref="home.ActivityMaster">Activity Master</a>
+        </li>
+         <li ui-sref-active="active">
+          <a ui-sref="home.ActivityTransaction">Activity Transaction</a>
+        </li>
+        
+        <li ui-sref-active="active">
+          <a ui-sref="home.ImportExcel">BOM Master</a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="home.UnitOfMeasurement">UOM Master</a>
+        </li>
+      </ul>
+        
+    </li>
+      
+
+    <li ng-class="{active: collapseVar==3}" >
+      <a href="" ng-hide="inventory_access == '0'" ng-click="check(3)"><i class="fa fa-archive pull-right"></i> 
+        Inventory</a>
+      <ul class="nav nav-second-level" collapse="collapseVar!=3">
+
+        <!-- <li ui-sref-active="active">
+          <a ui-sref="home.ImportExcel">Import Excel</a>
+        </li> -->
+       
+        <li ui-sref-active="active">
+          <a ui-sref="home.MaterialStock">Stock</a>
+        </li>
+      </ul>
+    </li>
+   
+   <li ng-class="{active: collapseVar==8}">{{dropDown}}
+      <a href="" ng-click="check(8)"><i class="fa fa-cogs pull-right">   </i>Gate Entry</a>
+        <ul class="nav nav-second-level" collapse="collapseVar!=8"  style="max-height: 260px; overflow: hidden; overflow-y: auto;">
+        <li>
+          <a ui-sref="home.inwardGateEntry">Inward Gate Entry</a>
+        </li>
+        <li>
+          <a ui-sref="home.outwardGateEntry">Outward Gate Entry</a>
+        </li>
+      </ul>
+    </li>
+
+    <li>
+      <a ui-sref="home.materialReceiptReport" ng-hide="material_receipt_access == '0'">Material Receipt Report</a>
+    </li>
+
+    <li ng-class="{active: collapseVar==5}">{{dropDown}}
+      <a href="" ng-hide="indent_access == '0'" ng-click="check(5)"><i class="fa fa-cogs pull-right">   </i>Indent</a>
+        <ul class="nav nav-second-level" collapse="collapseVar!=5"  style="max-height: 260px; overflow: hidden; overflow-y: auto;">
+
+          <li ui-sref-active="active">
+            <a ui-sref="home.IndentCreation">Internal Indent Creation</a>
+          </li>
+
+           <li ui-sref-active="active">
+            <a ui-sref="home.ExternalCreation">External Indent Creation</a>
+          </li>
+
+          <li ui-sref-active="active">
+            <a ui-sref="home.IndentApproval">Indent Approval</a>
+          </li>
+        </ul>
+    </li> 
+        
+ <li>
+      <a ui-sref="home.materialIssue" ng-hide="material_issue_access == '0'">Material Issue</a>
+    </li>
+      
+
+    
+        <li>
+          <a ui-sref="home.MaterialConsumption" ng-hide="gate_entry_access == '0'">Material Consumption</a>
+        </li>  
+         <li>
+          <a ui-sref="home.ConsumptionApproval" ng-hide="gate_entry_access == '0'">Consumption Approval</a>
+        </li>   
+    
+
+    <li>
+      <a ui-sref="home.materialRejection" ng-hide="material_rejection_access == '0'">Material Rejection</a>
+    </li>
+
+     <li ng-class="{active: collapseVar==4}" >
+      <a href="" ng-hide="inventory_access == '0'" ng-click="check(4)"><i class="fa fa-archive pull-right"></i> Material Return</a>
+      <ul class="nav nav-second-level" collapse="collapseVar!=4">
+
+        <li ui-sref-active="active">
+          <a ui-sref="home.materialReturn">Material Return By Contractor</a>
+        </li>
+       
+        <li ui-sref-active="active">
+          <a ui-sref="home.returnByStore">Material Return By Store</a>
+        </li>
+      </ul>
+    </li>
+   
+    <li>
+      <a ui-sref="home.materialTransferNote" ng-hide="material_transfer_note_access == '0'">Material Transfer Note</a>
+    </li>
+
+
+   
+
+   <!--  <li>
+      <a ui-sref="home.materialReturn" ng-hide="material_return_access == '0'">Material Return</a>
+    </li> -->
+  
+    <li ng-class="{active: collapseVar==6}">{{dropDown}}
+      <a href="" ng-hide="reports_access == '0'" ng-click="check(6)"><i class="fa fa-shopping-cart pull-right"></i>Reports</a>
+      <ul class="nav nav-second-level" collapse="collapseVar!=6"  style="max-height: 100px; overflow: hidden; overflow-y: auto;">
+
+        <!-- <li ui-sref-active="active">
+          <a ui-sref="home.InwardRegister">Inward Register</a>
+        </li>
+
+        <li ui-sref-active="active">
+          <a ui-sref="home.OutwardRegister">Outward Register</a>
+        </li> -->
+
+        <li ui-sref-active="active">
+          <a ui-sref="home.GateInwardRegister">Gate Inward Register</a>
+        </li>
+
+        <li ui-sref-active="active">
+          <a ui-sref="home.GateOutwardRegister">Gate Outward Register</a>
+        </li>
+
+        <li ui-sref-active="active">
+          <a ui-sref="home.SCStockMovementRegister">Sub-Contractor Stock Movement Register</a>
+        </li>
+
+        <!-- <li ui-sref-active="active">
+          <a ui-sref="home.InwardOutwardRegister">Inward Outward Register</a>
+        </li> -->
+
+        <li ui-sref-active="active">
+          <a ui-sref="home.DetailedStock">Detailed Stock</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</section>
+<footer class="footer" align="center">
+  <div><small>Powered by &nbsp <a href="www.globalbsc.com"> BSC Pvt. Ltd. </a></small></div>
+  <div><img src="images/bsclogo.png" style="height:130px; float:center;"  alt="bsc" ></div>   
+</footer>

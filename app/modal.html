@@ -1,0 +1,1909 @@
+<!-- view all notification-->
+<div id="finiusnoti" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modalProcess" style="width:40%;margin-left:30%;">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                All Notification Details11111
+            </div>
+            <div class="panel-body">
+                <ul class="list-group" >
+                    <li class="list-group-item" ng-repeat="Item in allNotiDetails">
+                        <span ng-if="Item.notification_status == 'Pending' ">
+                            <i ng-model="bell" class="fa fa-bell text-red"></i>
+                            <p> {{Item.notification_sender}} send {{Item.file_name}}
+                                <br> ID : {{Item.file_id}}</p>
+                            <button type="button" ng-click="showNotiDetails(Item.file_id,Item.file_name,Item.notification_status)" class="btn btn-info btn-sm">View</button>
+                        </span>
+                        <span ng-if="Item.notification_status == 'Complete' ">
+                            <i ng-model="bell" class="fa fa-bell text-green"></i>
+                            <p> {{Item.notification_sender}} send {{Item.file_name}}
+                                <br> ID : {{Item.file_id}}</p>
+                            <button type="button" ng-click="showNotiDetails(Item.file_id,Item.file_name,Item.notification_status)" class="btn btn-info btn-sm">View</button>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Part Inward Model [Start] -->
+ <div id="ModalPartInward" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="panel panel-primary Inwardloader"  dw-loading="Inwardloader">
+                <div class="panel-heading">
+                    Part Inward Details
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-info ">
+                        <div class="panel-heading">
+                            General Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        Challan No
+                                        <input class="form-control" ng-model="viewpartInward.challan_code" disabled="true">
+                                    </td>
+                                    <td>
+                                        Challan Date
+                                        <input class="form-control" ng-model="viewpartInward.challan_date" type="text" disabled="true" />
+                                    </td>
+                                    <td>
+                                        PO Code
+                                        <input class="form-control" type="text" ng-model="viewpartInward.PO_code" class="form-control" disabled="true">
+                                        <!--                <input class="form-control" type="text" ng-model="partInward.PO_code" typeahead="item.PO_code for item in PO_codes | filter:$viewValue | limitTo:8" typeahead-on-select="getTPODetails($item, $model, $label);" class="form-control" disabled="true">
+ -->
+                                    </td>
+                                    <td>
+                                        PO Date
+                                        <input class="form-control" ng-model="viewpartInward.PO_date" type="text" disabled="true" />
+                                    </td>
+                                    <td>
+                                        Vendor Code
+                                        <input class="form-control" ng-model="viewpartInward.vendor_code" disabled="true">
+                                    </td>
+                                    <td>
+                                        Vendor Name
+                                        <input class="form-control" ng-model="viewpartInward.vendor_name" disabled="true">
+                                    </td>
+                                    <td>
+                                        Contact Person
+                                        <input class="form-control" ng-model="viewpartInward.contact_person" disabled="true">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        Billing Address
+                                        <textarea class="form-control" ng-model="viewpartInward.billing_address" disabled="true"></textarea>
+                                    </td>
+                                    <td colspan="2">
+                                        Shipping Address
+                                        <textarea class="form-control" ng-model="viewpartInward.shipping_address" disabled="true"></textarea>
+                                    </td>
+                                    <td>
+                                        Contact Mobile No
+                                        <input class="form-control" ng-model="viewpartInward.contact_no" disabled="true">
+                                    </td>
+                                    <td>
+                                        PO Type
+                                        <input class="form-control" ng-model="viewpartInward.PO_type" disabled="true">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Part Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Part Code</th>
+                                    <th>Part Description</th>
+                                    <th>Cost</th>
+                                    <th>Qty</th>
+                                    <th>Total Weight</th>
+                                    <th>Total Cost</th>
+                                    <th></th>
+                                </tr>
+                                <tr ng-repeat="part in viewpartInwardPart">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{part.part_code}}</td>
+                                    <td>{{part.part_description}}</td>
+                                    <td>{{part.part_cost}}</td>
+                                    <td>{{part.part_quantity}}</td>
+                                    <td>{{part.total_part_weight}}</td>
+                                    <td>{{part.total_part_cost}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <th>Total Weight:</th>
+                                    <th>
+                                        <input type="text" class="form-control" ng-model="viewpartInward.total_weight" placeholder="Total Weight" disabled="true" />
+                                    </th>
+                                    <th>Basic Amount:</th>
+                                    <th>
+                                        <input type="text" class="form-control" ng-model="viewpartInward.BasicCost" placeholder="Total Amount" disabled="true" />
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Tax Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table" >
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tax Code</th>
+                                        <th>Tax Description</th>
+                                        <th>Tax %</th>
+                                        <th>Tax Amount</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr ng-repeat="item in viewrecordPartInwardTax">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{item.tax_code}}</td>
+                                        <td>{{item.tax_description}}</td>
+                                        <td>{{item.tax_percent}}</td>
+                                        <td>{{item.tax_total_amount}}</td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>Total Tax Amount:
+                                            <input type="text" class="form-control" ng-model="viewpartInward.txtTotalTaxAmount" placeholder="Total Cost" disabled="true"/>
+                                        </td>
+                                        <td>Total Amount:
+                                            <input type="text" class="form-control" ng-model="viewpartInward.txtTotalCost" placeholder="Total Cost" disabled="true"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Part Inward Detailsa
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        Driver Name
+                                        <input class="form-control" ng-model="viewpartInward.driver_name" type="text" placeholder="Enter Contact Person" disabled="true">
+                                    </td>
+                                    <td>
+                                        Contact Mobile No.
+                                        <input class="form-control" ng-model="viewpartInward.driver_contact_no" placeholder="Enter Contact Mobile No." disabled="true">
+                                    </td>
+                                    <td>
+                                        In Time
+                                        <input class="form-control" ng-model="viewpartInward.in_time" type="text" placeholder="Enter Contact Person" disabled="true">
+                                    </td>
+                                    <td>
+                                        Out Time
+                                        <input class="form-control" ng-model="viewpartInward.out_time" placeholder="Enter Contact Mobile No." disabled="true">
+                                    </td>
+                                    <td>
+                                        Vehicle No
+                                        <input class="form-control" ng-model="viewpartInward.vehicle_no" placeholder="Enter Contact Mobile No." disabled="true">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Other Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        Supervisor Name
+                                        <input class="form-control" ng-model="viewpartInward.supervisor_name" type="text" placeholder="Enter Contact Person" disabled="true">
+                                    </td>
+                                    <td>
+                                        Supervisor Mobile No.
+                                        <input class="form-control" ng-model="viewpartInward.supervisor_contact_no" placeholder="Enter Contact Mobile No." disabled="true">
+                                    </td>
+                                    <td>
+                                        Remark
+                                        <textarea class="form-control" ng-model="viewpartInward.remark" rows="4" disabled="true"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--   <button type="button" ng-click="submitPartInward()" class="form-control form-controlffset-1 btn btn-primary btn-lg">Save</button>
+                    <button type="button" ng-click="resetPartInward()" class="form-control form-controlffset-1 btn btn-primary btn-lg">Reset</button>
+                    <button type="button" ng-click="cancelPartInward()" class="form-control form-controlffset-1 btn btn-primary btn-lg">Cancel</button> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-sm col-md-1 col-md-offset-10" data-dismiss="modal" ng-click="ok()">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Part Inward Model [End] -->
+<div id="ModalPartInward1" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="panel panel-primary Inwardloader"  dw-loading="Inwardloader">
+                <div class="panel-heading">
+                    Part Inward Details
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-info ">
+                        <div class="panel-heading">
+                            General Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        Challan No
+                                        <input class="form-control" ng-model="viewpartInward.challan_code" disabled="true">
+                                    </td>
+                                    <td>
+                                        Challan Date
+                                        <input class="form-control" ng-model="viewpartInward.challan_date" type="text" disabled="true" />
+                                    </td>
+                                    <td>
+                                        PO Code
+                                        <input class="form-control" type="text" ng-model="viewpartInward.PO_code" class="form-control" disabled="true">
+                                        <!--                <input class="form-control" type="text" ng-model="partInward.PO_code" typeahead="item.PO_code for item in PO_codes | filter:$viewValue | limitTo:8" typeahead-on-select="getTPODetails($item, $model, $label);" class="form-control" disabled="true">
+ -->
+                                    </td>
+                                    <td>
+                                        PO Date
+                                        <input class="form-control" ng-model="viewpartInward.PO_date" type="text" disabled="true" />
+                                    </td>
+                                    <td>
+                                        Vendor Code
+                                        <input class="form-control" ng-model="viewpartInward.vendor_code" disabled="true">
+                                    </td>
+                                    <td>
+                                        Vendor Name
+                                        <input class="form-control" ng-model="viewpartInward.vendor_name" disabled="true">
+                                    </td>
+                                    <td>
+                                        Contact Person
+                                        <input class="form-control" ng-model="viewpartInward.contact_person" disabled="true">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        Billing Address
+                                        <textarea class="form-control" ng-model="viewpartInward.billing_address" disabled="true"></textarea>
+                                    </td>
+                                    <td colspan="2">
+                                        Shipping Address
+                                        <textarea class="form-control" ng-model="viewpartInward.shipping_address" disabled="true"></textarea>
+                                    </td>
+                                    <td>
+                                        Contact Mobile No
+                                        <input class="form-control" ng-model="viewpartInward.contact_no" disabled="true">
+                                    </td>
+                                    <td>
+                                        PO Type
+                                        <input class="form-control" ng-model="viewpartInward.PO_type" disabled="true">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Part Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Part Code</th>
+                                    <th>Part Description</th>
+                                    <th>Cost</th>
+                                    <th>Qty</th>
+                                    <th>Total Weight</th>
+                                    <th>Total Cost</th>
+                                    <th></th>
+                                </tr>
+                                <tr ng-repeat="part in viewpartInwardPart">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{part.part_code}}</td>
+                                    <td>{{part.part_description}}</td>
+                                    <td>{{part.part_cost}}</td>
+                                    <td>{{part.part_quantity}}</td>
+                                    <td>{{part.total_part_weight}}</td>
+                                    <td>{{part.total_part_cost}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <th>Total Weight:</th>
+                                    <th>
+                                        <input type="text" class="form-control" ng-model="viewpartInward.total_weight" placeholder="Total Weight" disabled="true" />
+                                    </th>
+                                    <th>Basic Amount:</th>
+                                    <th>
+                                        <input type="text" class="form-control" ng-model="viewpartInward.BasicCost" placeholder="Total Amount" disabled="true" />
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Tax Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table" >
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tax Code</th>
+                                        <th>Tax Description</th>
+                                        <th>Tax %</th>
+                                        <th>Tax Amount</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr ng-repeat="item in viewrecordPartInwardTax">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{item.tax_code}}</td>
+                                        <td>{{item.tax_description}}</td>
+                                        <td>{{item.tax_percent}}</td>
+                                        <td>{{item.tax_total_amount}}</td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>Total Tax Amount:
+                                            <input type="text" class="form-control" ng-model="viewpartInward.txtTotalTaxAmount" placeholder="Total Cost" disabled="true"/>
+                                        </td>
+                                        <td>Total Amount:
+                                            <input type="text" class="form-control" ng-model="viewpartInward.txtTotalCost" placeholder="Total Cost" disabled="true"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Part Inward Detailsa
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        Driver Name
+                                        <input class="form-control" ng-model="viewpartInward.driver_name" type="text" placeholder="Enter Contact Person" disabled="true">
+                                    </td>
+                                    <td>
+                                        Contact Mobile No.
+                                        <input class="form-control" ng-model="viewpartInward.driver_contact_no" placeholder="Enter Contact Mobile No." disabled="true">
+                                    </td>
+                                    <td>
+                                        In Time
+                                        <input class="form-control" ng-model="viewpartInward.in_time" type="text" placeholder="Enter Contact Person" disabled="true">
+                                    </td>
+                                    <td>
+                                        Out Time
+                                        <input class="form-control" ng-model="viewpartInward.out_time" placeholder="Enter Contact Mobile No." disabled="true">
+                                    </td>
+                                    <td>
+                                        Vehicle No
+                                        <input class="form-control" ng-model="viewpartInward.vehicle_no" placeholder="Enter Contact Mobile No." disabled="true">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Other Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        Supervisor Name
+                                        <input class="form-control" ng-model="viewpartInward.supervisor_name" type="text" placeholder="Enter Contact Person" disabled="true">
+                                    </td>
+                                    <td>
+                                        Supervisor Mobile No.
+                                        <input class="form-control" ng-model="viewpartInward.supervisor_contact_no" placeholder="Enter Contact Mobile No." disabled="true">
+                                    </td>
+                                    <td>
+                                        Remark
+                                        <textarea class="form-control" ng-model="viewpartInward.remark" rows="4" disabled="true"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--   <button type="button" ng-click="submitPartInward()" class="form-control form-controlffset-1 btn btn-primary btn-lg">Save</button>
+                    <button type="button" ng-click="resetPartInward()" class="form-control form-controlffset-1 btn btn-primary btn-lg">Reset</button>
+                    <button type="button" ng-click="cancelPartInward()" class="form-control form-controlffset-1 btn btn-primary btn-lg">Cancel</button> -->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-sm col-md-1 col-md-offset-10" data-dismiss="modal" ng-click="ok()">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Record Client PO Details MOdel-->
+<div id="viewModalRecordClientPONoti" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modalProcess">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                View Record Client PO
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+            </div>
+            <div class="panel-body">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        General Details
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    PO Code
+                                </td>
+                                <td>
+                                    PO Date
+                                </td>
+                                <td>
+                                    Quatation Code
+                                </td>
+                                <td>
+                                    Quatation Date
+                                </td>
+                                <!-- <td>
+                                    Quatation File
+                                </td>
+                                 --><td>
+                                    Ref No
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtPOCode" disabled="true">
+                                </td>
+                                <td>
+                                    <div class="datepicker" date-format="dd/MM/yyyy"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                                        <input disabled="true" ng-model="viewRecordClientPO.txtPODate" type="text" class="form-control angular-datepicker-input" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtQuatationCode" type="text" disabled="true">
+                                </td>
+                                <td>
+                                    <div class="datepicker" date-format="dd/MM/yyyy"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                                        <input disabled="true" ng-model="viewRecordClientPO.txtQuatationDate" type="text" class="form-control  angular-datepicker-input" />
+                                    </div>
+                                </td>
+                                <!-- <td>
+                                    <button ng-click="downloadFile()" type="button" style="background:none;border:none;color:blue;">
+                                        <span class="glyphicon glyphicon-download">Download</span>
+                                    </button>
+                                </td>
+                                 --><td>
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtRefNo" disabled="true">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Client Details
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    Client Code
+                                </td>
+                                <td>
+                                    Client Name
+                                </td>
+                                <td>
+                                    Contact Person
+                                </td>
+                                <td>
+                                    Contact No
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtClientCode" disabled="true">
+                                </td>
+                                <td>
+                                    <input class="form-control" type="text" ng-model="viewRecordClientPO.txtClientName" class="form-control" disabled="true">
+                                </td>
+                                <td>
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtContactPerson" disabled="true">
+                                </td>
+                                <td>
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtContactNo" disabled="true">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    Billing Address
+                                </td>
+                                <td colspan="2">
+                                    Shipping Address
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <textarea class="form-control" ng-model="viewRecordClientPO.taBillingAddress" disabled="true"></textarea>
+                                </td>
+                                <td colspan="2">
+                                    <textarea class="form-control" ng-model="viewRecordClientPO.taShippingAddress" disabled="true"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Part Details
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>#</th>
+                                <th>Part Code</th>
+                                <th>Part Description</th>
+                                <th>Make</th>
+                                <th>Quantity</th>
+                                <th>Part UOM</th>
+                                <th>Rate</th>
+                                <th>Discount %</th>
+                                <th>Total Amount</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="cpop in viewClientPOPart">
+                                <td>{{$index + 1}}</td>
+                                <td>{{cpop.part_code}}</td>
+                                <td>{{cpop.part_description}}</td>
+                                <td>{{cpop.part_make}}</td>
+                                <td>{{cpop.part_quantity}}</td>
+                                <td>{{cpop.part_UOM}}</td>
+                                <td>{{cpop.part_rate_per}}</td>
+                                <td>{{cpop.part_discount}}</td>
+                                <td>{{cpop.part_total_amount }}</td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="...">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Tax Details
+                    </div>
+                    <div class="panel-body">
+                        <table class="table" ng-init="getCountTax()">
+                            <tr>
+                                <th>#</th>
+                                <th>Tax Code</th>
+                                <th>Tax Description</th>
+                                <th>Tax %</th>
+                                <th>Tax Amount</th>
+                                <th></th>
+                            </tr>
+                            <tr ng-repeat="tax in ClientPOTaxDeatils">
+                                <td>{{$index + 1}}</td>
+                                <td>{{tax.tax_code}}</td>
+                                <td>{{tax.tax_description}}</td>
+                                <td>{{tax.tax_percent}}</td>
+                                <td>{{tax.tax_total_amount}}</td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="...">
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <label>Total Amount</label>
+                                    <input type="text" class="form-control" ng-model="viewRecordClientPO.txtTotalAmount" disabled="true" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Client Registration Details
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    PAN No
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtClientPAN" disabled="true">
+                                </td>
+                                <td>
+                                    Excise No
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtExciseNo" disabled="true">
+                                </td>
+                                <td>
+                                    VAT TIN No
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtVATTINNo" disabled="true">
+                                </td>
+                                <td>
+                                    CST TIN No
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtCSTTINNO" disabled="true">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Other Details
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>
+                                    Transport
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtTransport" disabled="true">
+                                </td>
+                                <td>
+                                    Insurance
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtInsurance" disabled="true">
+                                </td>
+                                <td>
+                                    Taxes
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtTaxes" disabled="true">
+                                </td>
+                                <td>
+                                    Payment Terms
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtPaymentTerm" disabled="true">
+                                </td>
+                                <td>
+                                    Octroi
+                                    <input class="form-control" ng-model="viewRecordClientPO.txtOctroi" disabled="true" />
+                                </td>
+                                <td style="width:250px;">
+                                    Delivery Date
+                                    <div class="datepicker" date-format="dd/MM/yyyy"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                                        <input ng-model="viewRecordClientPO.txtDeliveryDate" type="text" class="form-control  angular-datepicker-input" disabled="true" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    Extra Notes
+                                    <textarea class="form-control" ng-model="viewRecordClientPO.txtExtraNotes" disabled="true"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <button type="button" data-dismiss="modal" class="col-md-1 col-md-offset-10 btn btn-primary btn-sm">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal requisition details start -->
+<div id="ViewRequisitionReportNoti" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modalrequisitionreport">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                        Requisition Details
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                General Details
+                            </div>
+                            <div class="panel-body">
+                                <table>
+                                    <tr>
+                                        <td>Requisition Code</td>
+                                        <td>Requisition Date</td>
+                                        <td>Project Code</td>
+                                        <td>Project Name</td>
+                                        <td>Project Handled By</td>
+                                        <td>Handler Contact No</td>
+                                        <td>Project Fabricated By</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.requisition_code" disabled="true" id="requisition_code">
+                                        </td>
+                                        <td>
+                                            <input ng-model="ProductionRequisitionDetails.requisition_date" type="text" class="form-control angular-datepicker-input" id="requisition_date" disabled="true" />
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.project_code" disabled="true" id="project_code">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" type="text" ng-model="ProductionRequisitionDetails.project_name" class="form-control" disabled="true" id="project_name">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.project_handled_by" disabled="true" id="project_handled_by">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.handler_contact_no" disabled="true" id="handler_contact_no">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.project_fabricated_by" disabled="true" id="project_fabricated_by">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fabricated Contact No</td>
+                                        <td>Project Marketing By</td>
+                                        <td>Marketers Contact No</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.fabricator_contact_no" disabled="true" id="fabricator_contact_no" />
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.project_marketed_by" disabled="true" id="project_marketed_by">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.marketor_contact_no" disabled="true" id="marketor_contact_no">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Item Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Item Code</th>
+                                        <th>Item Description</th>
+                                        <th>Type</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                    <tr ng-repeat="item in ProductionRequisitionDetailsItem">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{item.item_code}}</td>
+                                        <td>{{item.item_description}}</td>
+                                        <td>{{item.item_type}}</td>
+                                        <td>{{item.item_quantity}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Requestor Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td>Requestor Name
+                                        </td>
+                                        <td>Requestor Mobile No.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.requester_name" type="text" disabled="true" placeholder="Enter Name" id="requester_name">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.requester_contact_no" disabled="true" placeholder="Enter Contact Mobile No." id="requester_contact_no">
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Extra Notes
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea class="form-control" disabled="true" ng-model="ProductionRequisitionDetails.extra_note" placeholder="Extra Notes" id="extra_note"></textarea>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-dismiss="modal" ng-click="ok()">OK</button>
+                </div>
+            </div>
+    </div>
+</div>
+<!-- modal BOM details start -->
+<!-- Modal Purches Order Start -->
+<div id="viewPOAdditionDetails" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modalProcess">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                                View Purchase Order 
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                            </div>
+                    <div class="panel-body">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                General Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td>PO Code
+                                        </td>
+                                        <td>PO Date
+                                        </td>
+                                        <td>Ref No
+                                        </td>
+                                        <td>Project Code
+                                        </td>
+                                        <td>Vendor Code
+                                        </td>
+                                        <td>Vendor Name
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtPOCode" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input ng-model="editrecordPurchaseOrderAddition.txtPODate" type="text" class="form-control angular-datepicker-input" disabled="true" />
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtRefNo" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" disabled="true" type="text" ng-model="editrecordPurchaseOrderAddition.txtProjectCode">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" id="txtVendorCode" ng-model="editrecordPurchaseOrderAddition.txtVendorCode" disabled="true" />
+                                        </td>
+                                        <td>
+                                            <input class="form-control" type="text" ng-model="editrecordPurchaseOrderAddition.txtVendorName" disabled="true">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact Person Name
+                                        </td>
+                                        <td>Contact Mobile No.
+                                        </td>
+                                        <td colspan="2">Billing Address
+                                        </td>
+                                        <td colspan="2">Shipping Address
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtContactPerson" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtContactMobileNo" disabled="true">
+                                        </td>
+                                        <td colspan="2">
+                                            <textarea class="form-control" ng-model="editrecordPurchaseOrderAddition.taBillingAddress" disabled="true"></textarea>
+                                        </td>
+                                        <td colspan="2">
+                                            <textarea class="form-control" ng-model="editrecordPurchaseOrderAddition.taShippingAddress" disabled="true"></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Item Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Item Code</th>
+                                        <th>Item Description</th>
+                                        <th>Item Quantity</th>
+                                        <th>Item UOM</th>
+                                        <th>Item Cost</th>
+                                        <th>Total Item Cost</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr ng-repeat="item in editrecordPurchaseOrderAdditionItem">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{item.item_code}}</td>
+                                        <td>{{item.item_description}}</td>
+                                        <td>{{item.item_quantity}}</td>
+                                        <td>{{item.item_UOM}}</td>
+                                        <td>{{item.item_cost}}</td>
+                                        <td>{{item.total_item_cost}}</td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    <tr rowspan="2">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <th><b>Basic Amount:</b>
+                                            <b><input type="text" ng-model="editrecordPurchaseOrderAddition.txtBasicCost" disabled="true" /></b>
+                                        </th>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Tax Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table" >
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tax Code</th>
+                                        <th>Tax Description</th>
+                                        <th>Tax %</th>
+                                        <th>Tax Amount</th>
+                                        <th></th>
+                                    </tr>
+                                    <tr ng-repeat="item in editrecordPOTax">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{item.tax_code}}</td>
+                                        <td>{{item.tax_description}}</td>
+                                        <td>{{item.tax_percent}}</td>
+                                        <td>{{item.tax_total_amount}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>Total Amount:</b>
+                                        <b><input type="text" ng-model="editrecordPurchaseOrderAddition.txtTotalCost"  disabled="true"/></b>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Delivery Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td>Delivery Period
+                                        </td>
+                                        <td>Delivery Date
+                                        </td>
+                                        <td>Delivery Charge
+                                        </td>
+                                        <td>Delivery Incharge Name
+                                        </td>
+                                        <td>Delivery Incharge No.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtDeliveryPeriod" type="text" placeholder="Enter Contact Person" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input ng-model="editrecordPurchaseOrderAddition.txtDeliveryDate" type="text" disabled="true" />
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtDeliveryCharge" placeholder="Enter Billing Address" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtDeliveryIncharge" placeholder="Enter Billing Address" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtDeliveryInchargeNo" placeholder="Enter Billing Address" disabled="true">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Company Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td>PAN No.
+                                        </td>
+                                        <td>Excise No.
+                                        </td>
+                                        <td>VAT TIN No.
+                                        </td>
+                                        <td>CST TIN No.
+                                        </td>
+                                        <td>LBT
+                                        </td>
+                                        <td>Collectrorate
+                                        </td>
+                                        <td>Division
+                                        </td>
+                                        <td>Range
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="recordPurchaseOrderAddition.txtPAN" type="text" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="recordPurchaseOrderAddition.txtExcise" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="recordPurchaseOrderAddition.txtVAT" type="text" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="recordPurchaseOrderAddition.txtCST" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="recordPurchaseOrderAddition.txtLBT" type="text" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtCollectrorate" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtDivision" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtRange" disabled="true">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Other Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td>Transport
+                                        </td>
+                                        <td>Insurance
+                                        </td>
+                                        <td>Taxes
+                                        </td>
+                                        <td>Payment Term
+                                        </td>
+                                        <td>Octroi
+                                        </td>
+                                        <td>Remark
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtTransport" type="text" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtInsurance" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtTaxes" type="text" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtPaymentTerm" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="editrecordPurchaseOrderAddition.txtOctroi" type="text" placeholder="Enter" disabled="true">
+                                        </td>
+                                        <td>
+                                            <textarea class="form-control" ng-model="editrecordPurchaseOrderAddition.taRemark" disabled="true"></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                     </div>
+                 <div class="row">
+                    <button class="col-md-1 col-md-offset-10 btn btn-primary btn-sm" data-dismiss="modal">OK</button>
+                </div>
+                 </div>
+            </div>
+      </div>
+<!-- modal view part inward start -->
+<div id="viewModalInwordAdditionNoti" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modalProcess">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Inward Addition
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                <div class="panel-body">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            General Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>PO No
+                                    </td>
+                                    <td>
+                                        Challan No
+                                    </td>
+                                    <td style="width:150px;">
+                                        Challan Date
+                                    </td>
+                                    <td>
+                                        Vendor Code
+                                    </td>
+                                    <td>
+                                        Vendor Name
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="viewmaterialInwardAddition.txtPONo" disabled="true" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="viewmaterialInwardAddition.txtChallanNo" type="text" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input ng-model="viewmaterialInwardAddition.txtChallanDate" type="text" class="angular-datepicker-input" disabled="true" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="viewmaterialInwardAddition.txtVendorCode" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="viewmaterialInwardAddition.txtVendorName" disabled="true">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Billing Address
+                                    </td>
+                                    <td>
+                                        Shipping Address
+                                    </td>
+                                    <td>
+                                        Contact Person
+                                    </td>
+                                    <td>
+                                        Contact Mobile No
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <textarea class="form-control" ng-model="viewmaterialInwardAddition.taBillingAddress" disabled="true"></textarea>
+                                    </td>
+                                    <td>
+                                        <textarea class="form-control" ng-model="viewmaterialInwardAddition.taShippingAddress" disabled="true"></textarea>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="viewmaterialInwardAddition.txtContactPerson" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="viewmaterialInwardAddition.txtContactMobileNo" disabled="true">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Item Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Item Code</th>
+                                    <th>Item Description</th>
+                                    <th>Item Qty</th>
+                                    <th>Item Weight</th>
+                                    <th>Item Cost</th>
+                                    <th>Total Weight</th>
+                                    <th>Total Cost</th>
+                                    <th></th>
+                                </tr>
+                                <tr ng-repeat="item in viewmaterialInwordItem">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{item.item_code}}</td>
+                                    <td>{{item.item_description}}</td>
+                                    <td>{{item.item_quantity}}</td>
+                                    <td>{{item.item_weight}}</td>
+                                    <td>{{item.item_cost}}</td>
+                                    <td>{{item.total_weight}}</td>
+                                    <td>{{item.total_cost}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Total Item Weight:</td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="viewmaterialInwardAddition.txtTotalItemWeight" placeholder="Total Cost" disabled="true" />
+                                    </td>
+                                    <td>Total Item Cost:</td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="viewmaterialInwardAddition.txtTotalItemCost" placeholder="Total Weight" disabled="true" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Driver Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        Driver Name
+                                    </td>
+                                    <td>
+                                        Contact Mobile No.
+                                    </td>
+                                    <td>
+                                        In Time
+                                    </td>
+                                    <td>
+                                        Out Time
+                                    </td>
+                                    <td>
+                                        Vehicle No
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input class="form-control" ng-model="viewmaterialInwardAddition.txtDriverName" type="text" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="viewmaterialInwardAddition.txtContactNo" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td style="padding-top:10px;">
+                                        <div class="input-group">
+                                            <input class="form-control" ng-model="viewmaterialInwardAddition.txtInTime" type="text" placeholder="Enter " disabled="true">
+                                            <span class="input-group-btn">
+                                        <div data-clock-icon-class="glyphicon glyphicon-time" data-inc-icon-class="fa fa-chevron-up" data-dec-icon-class="fa fa-chevron-down" ez-timepicker="materialInwardAddition.txtInTime"></div>
+                                      </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="viewmaterialInwardAddition.txtOutTime" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="viewmaterialInwardAddition.txtVehicleNo" placeholder="Enter " disabled="true">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Good Reciever Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        Reciever Name
+                                    </td>
+                                    <td>
+                                        Reciever Mobile No.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input class="form-control" ng-model="viewmaterialInwardAddition.txtReceiverName" type="text" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="viewmaterialInwardAddition.txtReceiverContactNo" placeholder="Enter " disabled="true">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit modal -->
+<div id="ViewProductionReportAdditionNotify" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modalProcess">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Production Report
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                        </div>
+                <div class="panel-body">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                        General Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>Production Report Code
+                                    </td>
+                                    <td>Project Code
+                                    </td>
+                                    <td style="width:130px">Production Report Date
+                                    </td>
+                                    <td style="width:130px">Project Start Date
+                                    </td>
+                                    <td>Project Name
+                                    </td>
+                                    <td>Project Handled By
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtProductionReportCode" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtProjectCode" disabled="true">
+                                    </td>
+                                    <td style="width:130px">
+                                        <div>
+                                            <input ng-model="editProductionReport.txtProductionReportDate" type="text" class="form-control angular-datepicker-input" disabled="true" />
+                                        </div>
+                                    </td>
+                                    <td style="width:130px">
+                                        <div class="datepicker" date-format="dd/MM/yyyy"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                                            <input ng-model="editProductionReport.txtProjectStartDate" type="text" class="form-control angular-datepicker-input" disabled="true" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" type="text" ng-model="editProductionReport.txtProjectName" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtProjectHandledBy" disabled="true">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Handler Contact No
+                                    </td>
+                                    <td>Project Fabricated By
+                                    </td>
+                                    <td>Fabricated Contact No
+                                    </td>
+                                    <td>Project Marketing By
+                                    </td>
+                                    <td>Marketers Contact No
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtHandlerContactNo" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.ProjectFabricatedBy" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtFabricatedContactNo" disabled="true" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtProjectMarketingBy" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtMarketersContactNo" disabled="true">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Client Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>Client Code
+                                    </td>
+                                    <td>Client Name
+                                    </td>
+                                    <td>Client Person
+                                    </td>
+                                    <td>Contact No
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtClientCode" type="text" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtCustomerName" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtContactPerson" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtContactNo" disabled="true">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Billing Address
+                                    </td>
+                                    <td>Shipping Address
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <textarea class="form-control" ng-model="editProductionReport.taBillingAddress" disabled="true"></textarea>
+                                    </td>
+                                    <td>
+                                        <textarea class="form-control" ng-model="editProductionReport.taShippingAddress" disabled="true"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Part Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Part Code</th>
+                                    <th>Part Description</th>
+                                    <th>Rate</th>
+                                    <th>Quantity</th>
+                                    <th>Approx Weight</th>
+                                    <th>Total Amount</th>
+                                    <th>Drawing No</th>
+                                    <th>Drawing Recieving Date</th>
+                                    <th>Tentative Dispatch Date</th>
+                                    <th>Actual Dispatch Date</th>
+                                    <th>Delay By</th>
+                                    <th></th>
+                                </tr>
+                                <tr ng-repeat="prp in viewProjectReportPartDetails">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{prp.part_code}}</td>
+                                    <td>{{prp.part_description}}</td>
+                                    <td>{{prp.part_rate}}</td>
+                                    <td>{{prp.part_quantity}}</td>
+                                    <td>{{prp.approx_weight_in_kg}}</td>
+                                    <td>{{prp.total_part_cost}}</td>
+                                    <td>{{prp.drawing_no}}</td>
+                                    <td>{{prp.drawing_receiving_date}}</td>
+                                    <td>{{prp.tentative_dispatch_date}}</td>
+                                    <td>{{prp.actual_dispatch_date}}</td>
+                                    <td>{{prp.delay_period}}</td>
+                                    <td>
+                                        <div class="btn-group" role="group" aria-label="...">
+                                            <button type="button" class="btn btn-info" ng-click="viewProjectReortPartProcessModal(prp.part_code,editProductionReport.txtProjectCode)">View Process
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Total Part Weight:</td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="editProductionReport.txtTotalItemWeight" disabled="true" />
+                                    </td>
+                                    <td>Total Part Cost:</td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="editProductionReport.txtTotalItemCost" disabled="true" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Generator Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>Generator Name
+                                    </td>
+                                    <td>Generator Mobile No.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtGeneratorName" type="text" placeholder="Enter Name" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="editProductionReport.txtContactMobileNo" placeholder="Enter Contact Mobile No." disabled="true">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Remark
+                                        <textarea class="form-control" ng-model="editProductionReport.taRemark" disabled="true"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div>
+                       <button class="btn btn-primary btn-sm col-md-1 col-md-offset-10" data-dismiss="modal" ng-click="ok()">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- view process modal -->
+<div id="viewProjectPartProcessModalNotify" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modalProcess">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Process Details
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <td>#</td>
+                                <td>Process Code</td>
+                                <td>Process Description</td>
+                                <td>Planning Date</td>
+                                <td>Process Cost</td>
+                                <td>Actual Planning Date</td>
+                                <td>Delay By</td>
+                                <td></td>
+                            </tr>
+                            <tr ng-repeat="vppp in viewProjectPartProcess">
+                                <td>{{$index + 1}}</td>
+                                <td>{{vppp.process_code}}</td>
+                                <td>{{vppp.process_description}}</td>
+                                <td>{{vppp.process_plannning_date}}</td>
+                                <td>{{vppp.process_cost}}</td>
+                                <td>{{vppp.process_actual_date}}</td>
+                                <td>{{vppp.process_delay_period}}</td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+        </div>
+</div>
+<div id="ViewModalRequisitionReportNoti" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modalrequisitionreport">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                        Requisition Details
+                    </div>
+                    <div class="panel-body">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                General Details
+                            </div>
+                            <div class="panel-body">
+                                <table>
+                                    <tr>
+                                        <td>Requisition Code</td>
+                                        <td>Requisition Date</td>
+                                        <td>Project Code</td>
+                                        <td>Project Name</td>
+                                        <td>Project Handled By</td>
+                                        <td>Handler Contact No</td>
+                                        <td>Project Fabricated By</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.requisition_code" disabled="true" id="requisition_code">
+                                        </td>
+                                        <td>
+                                            <input ng-model="ProductionRequisitionDetails.requisition_date" type="text" class="form-control angular-datepicker-input" id="requisition_date" disabled="true" />
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.project_code" disabled="true" id="project_code">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" type="text" ng-model="ProductionRequisitionDetails.project_name" class="form-control" disabled="true" id="project_name">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.project_handled_by" disabled="true" id="project_handled_by">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.handler_contact_no" disabled="true" id="handler_contact_no">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.project_fabricated_by" disabled="true" id="project_fabricated_by">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fabricated Contact No</td>
+                                        <td>Project Marketing By</td>
+                                        <td>Marketers Contact No</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.fabricator_contact_no" disabled="true" id="fabricator_contact_no" />
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.project_marketed_by" disabled="true" id="project_marketed_by">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.marketor_contact_no" disabled="true" id="marketor_contact_no">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Item Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Item Code</th>
+                                        <th>Item Description</th>
+                                        <th>Type</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                    <tr ng-repeat="item in ProductionRequisitionDetailsItem">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{item.item_code}}</td>
+                                        <td>{{item.item_description}}</td>
+                                        <td>{{item.item_type}}</td>
+                                        <td>{{item.item_quantity}}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                Requestor Details
+                            </div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tr>
+                                        <td>Requestor Name
+                                        </td>
+                                        <td>Requestor Mobile No.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.requester_name" type="text" disabled="true" placeholder="Enter Name" id="requester_name">
+                                        </td>
+                                        <td>
+                                            <input class="form-control" ng-model="ProductionRequisitionDetails.requester_contact_no" disabled="true" placeholder="Enter Contact Mobile No." id="requester_contact_no">
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Extra Notes
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <textarea class="form-control" disabled="true" ng-model="ProductionRequisitionDetails.extra_note" placeholder="Extra Notes" id="extra_note"></textarea>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-dismiss="modal" ng-click="ok()">OK</button>
+                </div>
+            </div>
+    </div>
+</div>
+<!-- <div id="ViewModalRequisitionReportNoti" class="modal fade" tabindex="-1">
+ --><div id="ViewModalBoughtOutMaterialReportNoti" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <label>BOM Details</label>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            General Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td> Bom Code
+                                    </td>
+                                    <td> Department
+                                    </td>
+                                    <td> Requisition Code
+                                    </td>
+                                    <td> Bom Date
+                                    </td>
+                                    <td> Project Code
+                                    </td>
+                                    <td> Requisition Date
+                                    </td>
+                                    <td> Project Name
+                                    </td>
+                                    <td> Project Handled By
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.BOM_code" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.requested_department" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.requisition_code" type="text" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td class="datepicker" style="width:150px;" date-format="yyyy-MM-dd" button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                                        <input ng-model="BOMReportDetails.BOM_date" type="text" class="form-control angular-datepicker-input" disabled="true" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.project_code" type="text" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td class="datepicker" style="width:150px;" date-format="yyyy-MM-dd"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                                        <input ng-model="BOMReportDetails.requisition_date" type="text" class="form-control angular-datepicker-input" disabled="true" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.project_name" type="text" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.project_handled_by" placeholder="Enter" disabled="true">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td> Handler Contact No
+                                    </td>
+                                    <td> Fabricated Contact No
+                                    </td>
+                                    <td> Project Fabricated By
+                                    </td>
+                                    <td> Project Marketing By
+                                    </td>
+                                    <td> Marketers Contact No
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.handler_contact_no" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.project_fabricated_by" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.fabricator_contact_no" placeholder="Enter" disabled="true" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.project_marketed_by" placeholder="Enter" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.marketor_contact_no" placeholder="Enter" disabled="true">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Item Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Item Code</th>
+                                    <th>Item Description</th>
+                                    <th>Item Qty</th>
+                                    <th>Total Weight</th>
+                                    <th>Total Cost</th>
+                                    <th></th>
+                                </tr>
+                                <tr ng-repeat="item in BOMReportDetailsItem">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{item.item_code}}</td>
+                                    <td>{{item.item_description}}</td>
+                                    <td>{{item.item_quantity}}</td>
+                                    <td>{{item.item_weight}}</td>
+                                    <td>{{item.item_cost}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>Total Item Weight:</td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="BOMReportDetails.total_weight" placeholder="Total Weight" disabled="true" />
+                                    </td>
+                                    <td>Total Item Cost:</td>
+                                    <td>
+                                        <input type="text" class="form-control" ng-model="BOMReportDetails.total_cost" placeholder="Total Cost" disabled="true" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            Requestor Details
+                        </div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <tr>
+                                    <td>Requestor Name
+                                    </td>
+                                    <td>Requestor Mobile No.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.requester_name" type="text" placeholder="Enter Name" disabled="true">
+                                    </td>
+                                    <td>
+                                        <input class="form-control" ng-model="BOMReportDetails.requester_contact_no" placeholder="Enter Contact Mobile No." disabled="true">
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Remark
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <textarea class="form-control" ng-model="BOMReportDetails.remark" placeholder="Enter" disabled="true"></textarea>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-sm col-md-1 col-md-offset-10" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

@@ -1,0 +1,316 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+
+
+<!-- <div ng-app="myApp" ng-controller="orderCtrl">
+
+<ul>
+<li ng-repeat="indent in indent_status | orderBy">{{indent}}</li>
+</ul>
+
+</div> -->
+
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary" >
+
+  <div class="panel-heading" ng-hide="addNewIndentForm">
+    Indent Approval
+    <!-- <button class="btn-md button button1 fa fa-user-plus pull-right"
+                ng-click="form2.indent_id.$pristine=true;form2.indent_code.$pristine=true;form2.indent_date.$pristine=true;form2.project_id.$pristine=true;form2.site_id.$pristine=true;form2.activity_id.$pristine=true;form2.contractor_id.$pristine=true;form2.indent_type.$pristine=true;form2.indent_by.$pristine=true;form2.material_code.$pristine=true;form2.material_name.$pristine=true;form2.material_description.$pristine=true;form2.quantity.$pristine=true;form2.unit_of_measurment.$pristine=true;addNewIndent();">Approve Indent</button> -->
+  </div>
+  
+
+  <div class="panel-body" ng-init="getIndentListforApproval();getMultiSelect();">
+  <div class="panel panel-info" ng-hide="addNewIndentForm">
+  <div class="small-top">
+
+  <!-- <div class="dropdown">
+  <button class="btn" ng-click="toggleSelect()" ng-disabled="disabled" ng-class="{'error': !valid()}">
+    <span class="pull-left">Select</span>
+    <span class="caret pull-right"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li>
+      <input class="input-block-level" type="text" ng-model="searchText.label" autofocus="autofocus" placeholder="Filter" />
+    </li>
+    <li >
+      <button class="btn-link btn-small" ng-click="checkAll()"><i class="icon-ok"></i> Check all</button>
+      <button class="btn-link btn-small" ng-click="uncheckAll()"><i class="icon-remove"></i> Uncheck all</button>
+    </li>
+    <li ng-repeat="i in example13data | filter:searchText">
+      <a ng-click="select(i); focus()">
+        <i ng-class="{'icon-ok': i.checked, 'icon-empty': !i.checked}"></i>{{i.label}}</a>
+    </li>
+  </ul>
+</div>
+
+   <div class="col-xs-6 col-sm-6 col-md-2" >
+        <select  multiple="multiple">
+          <option  value="indent_code">Indent Code</option>
+          <option  value="indent_date">Indent Date</option>
+          <!-- <option value="designation">DESIGNATION</option> --> 
+      <!--   </select>
+      </div>  --> 
+
+         <div ng-dropdown-multiselect="" options="example13data" selected-model="example13model" extra-settings="example13settings"></div>
+</div> 
+
+
+<!-- <br>
+    <div class="col-xs-6 col-sm-6 col-md-1">
+      <label><i class="icon-search"></i>Indent Code</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input type="text" name="indent_code" placeholder="Enter Indent Code" ng-model="searchKeyword.indent_code" class="form-control"/>
+      </div>
+
+      <div class="col-xs-6 col-sm-6 col-md-1">
+      <label><i class="icon-search"></i>Indent Date</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input type="text" name="indent_date" placeholder="Enter Indent Date" ng-model="searchKeyword.indent_date" class="form-control"/>
+      </div>
+
+      <div class="col-xs-6 col-sm-6 col-md-1">
+      <label><i class="icon-search"></i>Approved Status</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input type="text" name="indent_status" placeholder="Enter Indent Status" ng-model="searchKeyword.indent_status" class="form-control"/>
+      </div>
+</br> -->
+</br>
+    <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+        <thead>
+          <tr>     
+            <th class="text-center">Sr No</th>
+            <th class="text-center">Indent Code</th>
+            <th class="text-center">Indent Date</th>
+            <!-- <th class="text-center">Project Name</th>
+            <th class="text-center">Project Manager</th> -->
+            <th class="text-center">Indent Type</th>
+            <!-- <th class="text-center">Activity Name</th> -->
+            <th class="text-center">Contractor Name</th>
+            <th class="text-center">Site Location</th>
+            
+            <th class="text-center">Approved status</th>
+           
+            <th class="text-center">Approved By</th>
+            <!-- <th class="text-center">Approved Quantity</th> -->
+            
+
+            
+          </tr>
+           <tr>     
+            <th class="text-center"></th>
+            <th class="text-center"><input type="text" name="indent_code" placeholder="Enter Indent Code" ng-model="searchKeyword.indent_code" class="form-control"/></th>
+            <th class="text-center"><input type="text" name="indent_date" placeholder="Enter Indent Date" ng-model="searchKeyword.indent_date" class="form-control"/></th>
+            <!-- <th class="text-center">Project Name</th>
+            <th class="text-center">Project Manager</th> -->
+            <th class="text-center"><input type="text" name="indent_type" placeholder="Enter Indent Type" ng-model="searchKeyword.indent_type" class="form-control"/></th>
+            <!-- <th class="text-center">Activity Name</th> -->
+            <th class="text-center"><input type="text" name="contractor_name" placeholder="Enter Contractor Name" ng-model="searchKeyword.contractor_name" class="form-control"/></th>
+            <th class="text-center"><input type="text" name="site_location" placeholder="Enter Site Location" ng-model="searchKeyword.site_location" class="form-control"/></th>
+            
+            <th class="text-center"><input type="text" name="indent_status" placeholder="Enter Indent Status" ng-model="searchKeyword.indent_status" class="form-control"/></th>
+           
+            <th class="text-center"><input type="text" name="approved_by" placeholder="Enter Approved By" ng-model="searchKeyword.approved_by" class="form-control"/></th>
+            <!-- <th class="text-center">Approved Quantity</th> -->
+            
+
+            
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr ng-repeat="ind in indentList | filter: searchKeyword">            
+            <td>{{ $index + 1 }}</td>
+            <td><a href="" ng-click="getIndentDetailsforAP(ind.indent_code);">{{ind.indent_code}}</td>
+
+            <td >{{ind.indent_date}}</td>
+            <!-- <td>{{ind.project_name}}</td>
+            <td>{{ind.manager_name}}</td> -->
+            <td>{{ind.indent_type}}</td>
+            <!-- <td>{{ind.activity_name}}</td> -->
+            <td >{{ind.contractor_name}}</td>
+            <td>{{ind.site_location}}</td>
+           
+            <td>{{ind.indent_status}}</td>
+            <td>{{ind.approved_by}}</td>
+            <!-- <td>{{ind.approved_total_qty}}</td> -->
+            
+          </tr>
+        </tbody>
+      </table>   
+    </div>
+    
+  </div>
+  </div>
+  </div>
+
+<div class="panel-heading" ng-show="addNewIndentForm">
+    Approve Indent
+  </div>
+
+  <div class="panel-body" ng-show="addNewIndentForm">
+  <div class="panel panel-info">
+    <form name="form2" class="form" novalidate>
+      <div id="CreateIndent" ng-init="">
+        <div class="row small-top" ng-init="getProjectNameList();getActivityNameList1();getContractorNameList();getSiteLocationList();getMaterialList();getStoreList();">
+          <fieldset>
+            <legend><font style="color: #0598DD;">Indent Details</font></legend>
+ <div class="row small-top" style="margin-left: 10px;">
+              <div class="col-xs-6 col-sm-6 col-md-2">
+                <label >Project Name<span style="color:red">*</span></label>
+              </div>
+            <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+                <select class="form-control" required name='project_id' type="text" ng-model="indent.project_id" ng-options="i.project_id as i.project_name for i in projectNameList | orderBy : 'project_name'" ng-change=getManagerName(indent.project_id); disabled=""></select>
+                <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">Project Name Required</span>
+              </div>
+            
+              <div class="col-xs-6 col-sm-6 col-md-2">
+                <label >Activity Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.activity_id.$invalid && !form2.activity_id.$pristine }">
+                <select class="form-control" required name='activity_id' type="text" ng-model="indent.activity_id" ng-options="i.activity_id as i.activity_name for i in activityNameList1 | orderBy : 'activity_name'" disabled=""></select>
+                <span ng-show="!form2.activity_id.$pristine && form2.activity_id.$invalid" class="help-block label">Activity Name Required</span>
+              </div>
+            <div class="col-xs-6 col-sm-6 col-md-2" ng-init="">
+            <label >Store Name<span style="color:red">*</span></label>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-2 " ng-class="{ 'has-error' : form2.store_id.$invalid && !form2.store_id.$pristine }">
+            <select class="form-control" required name='store_id' type="text" style="text-align:left;" ng-model="indent.store_id" ng-options="i.store_id as i.store_name for i in storeNameList | orderBy : 'store_name'" disabled ng-change="getSiteNameList(indent.store_id);"></select>
+            <span ng-show="!form2.store_id.$pristine && form2.store_id.$invalid" class="help-block label">Store Name Required</span>
+          </div>
+</div>
+
+            <div class="row small-top" style="margin-left: 10px;">
+            <div class="col-xs-6 col-sm-6 col-md-2">
+                <label > Contractor Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.contractor_id.$invalid && !form2.contractor_id.$pristine }">
+                <select class="form-control" required name='contractor_id' type="text" ng-model="indent.contractor_id" ng-options="i.contractor_id as i.contractor_name for i in contractorNameList | orderBy : 'contractor_name'" disabled=""></select>
+                <span ng-show="!form2.contractor_id.$pristine && form2.contractor_id.$invalid" class="help-block label">Contractor Name Required</span>
+              </div>
+
+              <div class="col-xs-6 col-sm-6 col-md-2">
+                <label > Site Location<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.site_id.$invalid && !form2.site_id.$pristine }">
+                <select class="form-control" required name='site_id' type="text" ng-model="indent.site_id" ng-options="i.site_id as i.site_location for i in siteLocationList | orderBy : 'site_location'" disabled=""></select>
+                <span ng-show="!form2.site_id.$pristine && form2.site_id.$invalid" class="help-block label">Site Location Required</span>
+              </div>
+              
+
+            
+              
+         
+              <!-- <div class="col-xs-6 col-sm-6 col-md-2">
+                <label>Approved By</label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2">
+                <input type="text" class="form-control" ng-model="indent.approved_by">                         
+              </div> -->
+            </div>
+<hr>
+
+
+            <div class="row small-top" style="margin-left: 10px;">
+ <div class="col-xs-6 col-sm-6 col-md-2">
+                <label>Indent Number</label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2">
+                <input type="text" class="form-control" ng-model="indent.indent_code" ng-readonly="true"/>
+              </div>
+
+              <div class="col-xs-6 col-sm-6 col-md-2">
+                <label>Indent Date<span style="color:red">*</span>:</label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.indent_date.$invalid && !form2.indent_date.$pristine }">
+                <div class="datepicker" date-format="dd-MM-yyyy"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                  <input ng-model="indent.indent_date" placeholder="dd-MM-yyyy" type="text" class="form-control angular-datepicker-input" required name="indent_date" disabled="" />
+                  <span ng-show="!form2.indent_date.$pristine && form2.indent_date.$invalid" class="help-block label">Indent Date Required</span>
+                </div>
+              </div>
+            
+                 <div class="col-xs-6 col-sm-6 col-md-2">
+                <label>Indent Type<span style="color:red">*</span>:</label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.indent_type.$invalid && !form2.indent_type.$pristine }">
+                <input ng-model="indent.indent_type" class="form-control" name="indent_type" required disabled="" />     
+                </select>
+                <span ng-show="!form2.indent_type.$pristine && form2.indent_type.$invalid" class="help-block label">Indent Type Required</span>                        
+              </div>
+
+             
+</div>
+
+           
+            <div class="table-responsive small-top" ng-init="getMaterialCodeList();">
+              <table id="exportCreateIndent" class="table table-striped table-bordered" border="1">
+                <thead>
+                  <tr style="float: center;background-color: #CFD8DC;">     
+                    <th class="text-center">Sr No</th>
+                    <th class="text-center">Code</th>
+                    <th class="text-center">Material Name</th>
+                    <th class="text-center">Description</th>
+                    <th class="text-center">Quantity</th>
+                    <!--  <th class="text-center">Accepted Quantity</th> -->
+                    <th class="text-center" >UOM</th>
+                    <th class="text-center" style="width:15px">Approved quantity</th> 
+                    <!-- <th class="text-center">Action</th> -->
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+
+                  <tr ng-repeat="ind in indentMaterialList">
+                    <td>{{$index+1}}</td>
+                    <td>{{ind.material_code}}</td>
+                    <td>{{ind.material_name}}</td>
+                    <td>{{ind.material_description}}</td>
+                    <td> {{ind.indent_material_qty}}</td>
+                   <!--  <td>{{ind.accepted_quantity}}</td> -->
+                    <td>{{ind.unit_of_measurment}}</td>
+                  
+                    <td><input type="text" required name="approved_total_qty" ng-model="ind.approved_total_qty" ng-change="equalAmount(ind.indent_material_qty,ind.approved_total_qty,$index)" onkeypress="return isNumberKey(event)" class="form-control"></td>
+
+                      <!-- <button data-ng-show="editMode" data-ng-click="editMode = false;" class="btn btn-danger btn-xs"><span >Cancel</span></button> -->
+                    
+                  </tr>
+                </tbody>
+              </table>   
+            </div>
+            <div class="row small-top" style="margin-left: 300px;">
+             <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                  <label>Remark<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.remark.$invalid && !form2.remark.$pristine }">
+                  <TEXTAREA rows="3" cols="40"  type="text" style="width:400px" maxlength="30" name="remark" class="form-control" required ng-model="indent.remarks"/>
+                  <span ng-show="!form2.remark.$pristine && form2.remark.$invalid" class="help-block label">Address Required</span>
+                </div></div>
+            <div class="row" >
+              <div align="center">
+                <h2></h2>
+                <button ng-hide="addNewIndentData" ng-disabled="indent.indent_status==='Approved' || indent.indent_status==='Reject'" class="btn btn-primary"
+                ng-click="form2.indent_id.$pristine=false;form2.indent_code.$pristine=false;form2.indent_date.$pristine=false;form2.project_id.$pristine=false;form2.site_id.$pristine=false;form2.activity_id.$pristine=false;form2.contractor_id.$pristine=false;form2.indent_type.$pristine=false;form2.indent_by.$pristine=false;form2.material_code.$pristine=false;form2.material_name.$pristine=false;form2.material_description.$pristine=false;form2.quantity.$pristine=false;form2.unit_of_measurment.$pristine=false;approveIndent(!form2.$invalid);">Approve</button>
+                <button ng-hide="addNewIndentData" ng-disabled="indent.indent_status==='Reject' || indent.indent_status==='Approved'" class="btn btn-primary"
+                ng-click="form2.indent_id.$pristine=false;form2.indent_code.$pristine=false;form2.indent_date.$pristine=false;form2.project_id.$pristine=false;form2.site_id.$pristine=false;form2.activity_id.$pristine=false;form2.contractor_id.$pristine=false;form2.indent_type.$pristine=false;form2.indent_by.$pristine=false;form2.material_code.$pristine=false;form2.material_name.$pristine=false;form2.material_description.$pristine=false;form2.quantity.$pristine=false;form2.unit_of_measurment.$pristine=false;rejectIndent(!form2.$invalid);">Reject</button>
+                <button class="btn btn-info"  ng-click="genrateIndentapprovalPDF(indent.indent_code);">Print</button>
+                <button class="btn btn-danger" ng-click="hideAddIndentForm();">Cancel</button>
+              </div>
+            </div><br>
+          </fieldset>
+        </div>
+      </div>
+    </form>
+  </div>
+  </div>
+</div>
+</div>
+

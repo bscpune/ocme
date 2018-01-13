@@ -1,0 +1,140 @@
+<div class="row" dw-loading="loader">
+  <div class="panel panel-primary" >
+   <div class="panel-heading">
+     BOM Master
+     <button id="newBtn" class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.bom_number.$pristine=true;
+     form2.project_id.$pristine=true;
+     form2.site_id.$pristine=true;
+     form2.bom_type.$pristine=true;
+     hideTable();">Upload New BOM</button>
+   </div>
+   <div ng-init="getExcelList();getActivityNameList();" ng-hide="table"> 
+
+     <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+      <thead>
+        <tr>     
+          <th class="text-center">Sr No</th>
+          <th class="text-center">BOM Number</th>
+          
+          <th class="text-center">Project Name</th>
+          <th class="text-center">Site Name</th>
+          <th class="text-center">Activity</th>
+          <th class="text-center">Soil Type</th>             
+          <th class="text-center">Tower Type</th>
+        </tr>
+      </thead>
+      <tbody class="text-center">
+        <tr ng-repeat="entry in excelList | filter: searchKeyword">     
+          <td>{{$index+1}}</td>  
+          <td>{{entry.bom_number}}</td>
+          
+          <td>{{entry.project_name}}</td>
+          <td>{{entry.site_name}}</td>
+          <td>{{entry.activity_name}}</td>
+          <td>{{entry.soil_type}}</td>
+          <td>{{entry.tower_type}}</td>
+        </tr>
+      </tbody>
+    </table>  
+  </div>
+  <div class="panel panel-info" ng-show="table">
+   <br/>
+    <form name="form2" class="form" novalidate >
+      <div class="row small-top" ng-init="">
+      
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>BOM Code<span style="color:red">*</span></label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3"  ng-class="{ 'has-error' : form2.bom_number.$invalid && !form2.bom_number.$pristine }">
+          <input class="form-control " name='bom_number' required type="text" ng-model="excel.bom_number" readonly /><br/>
+          <span ng-show="!form2.bom_number.$pristine && form2.bom_number.$invalid" class="help-block label">BOM Code Required</span>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+            <label>BOM Type<span style="color:red">*</span></label>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-3" ng-class="{ 'has-error' : form2.bom_type.$invalid && !form2.bom_type.$pristine }">
+            <select class="form-control" ng-model="excel.bom_type" required name="bom_type">
+                     <option value="1">Standard BOM</option>
+                     <option value="2" >Site Specific BOM</option>
+            </select><span ng-show="!form2.bom_type.$pristine && form2.bom_type.$invalid" class="help-block label">BOM Type Required</span>   
+          </div>
+      </div>
+
+      <div class="row small-top">
+        <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getProjectNameList();">
+          <label >Project Name<span style="color:red">*</span></label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+          <select type="text" class="form-control"  name='project_id' required ng-model="excel.project_id" ng-options="i.project_id as i.project_name for i in projectNameList | orderBy : 'project_name'" ng-change="getSiteNameList(excel.project_id);"></select>
+          <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">Project Name Required</span>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-1" ng-init="" ng-if="excel.bom_type==='2'">
+          <label >Site Name<span style="color:red">*</span></label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3" ng-class="{ 'has-error' : form2.site_id.$invalid && !form2.site_id.$pristine }" ng-if="excel.bom_type==='2'">
+          <select class="form-control" name='site_id' type="text" ng-model="excel.site_id" ng-options="i.site_id as i.site_name for i in siteNameList | orderBy : 'site_name'" required></select><span ng-show="!form2.site_id.$pristine && form2.site_id.$invalid" class="help-block label">Site Name Required</span>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label >Acivity</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3">
+          <select type="text" name="activity_id" ng-model="excel.activity_id" class="form-control" ng-options="b.activity_id as b.activity_name for b in activityNameList | orderBy : 'activity_name'"></select>
+        </div> 
+      </div>
+
+      <div class="row small-top">
+        <div class="col-xs-6 col-sm-6 col-md-1" >
+          <label >Sand/Soil Type</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3">
+          <select type="text" name="soil_type" ng-model="excel.soil_type" class="form-control">
+            <option>Sandy soil</option>
+            <option>Clay soil</option>
+            <option>Silt soil</option>
+            <option>Peat soil</option>
+            <option>Saline Soil</option>
+            <option>Loam soil</option>
+          </select>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Tower Type</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3">
+          <input type="text" name="tower_type" ng-model="excel.tower_type" class="form-control">
+        </div>
+
+         <div class="col-xs-6 col-sm-6 col-md-1">
+        <label >BOM Manual/Upload<span style="color:red">*</span></label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.material_consumption.$invalid && !form2.material_consumption.$pristine }">
+        <select class="form-control" ng-model="consumption.material_consumption" required name="inventory_type">
+         <option ng-option value="manual">Manual Upload</option>
+         <option ng-option value="excel">Upload Excel</option>
+       </select>   
+       <span ng-show="!form2.material_consumption.$pristine && form2.material_consumption.$invalid" class="help-block label"> Type Of Material Consumption Required</span>
+     </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Upload File<span style="color:red">*</span></label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3">
+          <input type="file" name="file" class="form-control"onchange="angular.element(this).scope().UploadFile(this.files)"/>
+        </div>
+      </div>
+
+      <div class="row small-top" align="center">
+        <input type="button" value="Import" class="btn btn-primary" ng-disabled="!SelectedFileForUpload" ng-click="form2.bom_number.$pristine=false;
+     form2.project_id.$pristine=false;
+     form2.site_id.$pristine=false;
+     form2.bom_type.$pristine=false;ParseExcelDataAndSave(!form2.$invalid);" />
+        <input type="button" value="Cancel" class="btn btn-danger" ng-click="showTable();" />
+      </div>
+    </form>
+  </div>
+</div>
+
+</div>
+

@@ -1,0 +1,165 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" ng-hide="addStorageForm">
+  <div class="panel panel-info">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Storage Location Master
+        <button  class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.project_id.$pristine=true;
+        form2.store_id.$pristine=true;
+        showAddStorageForm();">
+        Add New Storage Location </button>
+      </div>
+    </div>
+    <div class="row small-top">
+    <div class="col-xs-6 col-sm-6 col-md-7">
+    </div>    
+    </div>
+    <div class="row small-top table-responsive">
+      <fieldset class="scheduler-border contain" ng-init="getStorageList();checkReferenceIDpayment(storage.project_id);" style="margin-right: 18px; margin-left: 15px;">
+        <table id="exportHODash" class="table table-bordered" border="1" fixed-header> 
+          <thead>
+            <tr>
+
+              <th class="text-center">Sr. No.</th>
+              <th class="text-center">Project Name<input type="text" name="indent_code" tooltip="Enter Project Name" ng-model="search.project_name" class="form-control"/></th>
+              <th class="text-center">Store Name<input type="text" name="indent_code" tooltip="Enter Store Name" ng-model="search.store_name" class="form-control"/></th>
+              <th class="text-center">Storage Location Code<input type="text" name="indent_code" tooltip="Enter Storage Location Code" ng-model="search.storage_location_code" class="form-control"/></th>
+              <th class="text-center">Storage Location Name<input type="text" name="indent_code" tooltip="Enter Storage Location Name" ng-model="search.storage_location_name" class="form-control"/></th>
+<th class="text-center">Status</th>
+              <th class="text-center">Action</th> 
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="storage in storageList1 | filter: search" ng-init='showReff=checkReferenceIDpayment(storage.project_id)'>
+              <td>{{ $index + 1 }}</td>
+              <td><span ng-show='showReff'>{{storage.project_name}}</span></a></td>
+              <td><span ng-show='showReff'>{{storage.store_name}}</span></a></td>
+              <td>{{storage.storage_location_code}}</td>
+             
+              <td>{{storage.storage_location_name}}</td>
+               <td>{{storage.active_status_display}}</td>
+              <td><span ng-show='showReff'><button class="btn btn-xs btn-info" ng-click="getStorageDetails(storage.project_id,storage.store_id);"><i class="glyphicon glyphicon-edit"></i></button>
+             <!--  <button class="btn btn-xs btn-danger" ng-click="deleteStorage(storage.storage_id);"><i class="glyphicon glyphicon-trash"></i></button> --></td>
+
+
+             <!--  <td><span ng-show='showReff'><button class="btn btn-xs btn-info"  ng-click="getStorageDetails(storage.project_id,storage.store_id);"><i class="glyphicon glyphicon-edit"></i></button></td> -->
+             <td><button id="active" class="btn btn-xs btn-success" ng-show="storage.active_status==0;" ng-click="deleteStorage(storage.storage_id,storage.active_status);"><i class="glyphicon glyphicon-trash"></i></button>
+         <button id="deactive" class="btn btn-xs btn-danger"  ng-show="storage.active_status==1;" ng-click="deleteStorage(storage.storage_id,storage.active_status);"><i class="glyphicon glyphicon-trash"></i></button>
+</td>
+            </tr>
+          </tbody>
+        </table>   
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<div class="row" dw-loading="loader" ng-show="addStorageForm">
+  <div class="panel panel-primary" >
+    <div class="panel-heading" ng-show="addStorageData">
+      Add New Storage Location 
+    </div>
+    <div class="panel-body">
+      <div class="panel panel-info">
+        <div class="panel-body">
+          <div  class="row" ng-init="getProjectNameList();getStoreNameList();">
+            <form name="form2" class="form" novalidate>           
+              <fieldset>
+                <legend><font style="color: #0598DD;">Storage Details</font></legend>
+              
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >Project Name<span style="color:red">*</span></label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+                    <select class="form-control" required name='project_id' type="text" ng-model="storage.project_id" ng-options="s.project_id as s.project_name for s in projectNameList | orderBy : 'project_name'" ng-change="getStoreName(storage.project_id);"></select>
+                    <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">Project Name Required</span>
+                  </div>
+
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >Store Name<span style="color:red">*</span></label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.store_id.$invalid && !form2.store_id.$pristine }">
+                    <select class="form-control" required name='store_id' type="text" ng-model="storage.store_id" ng-options="s.store_id as s.store_name for s in storeNameList | orderBy : 'store_name'" ></select>
+                    <span ng-show="!form2.store_id.$pristine && form2.store_id.$invalid" class="help-block label">Storage Name Required</span>
+                  </div>
+                
+                 <!-- <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label>Storage Location Code<span style="color:red">*</span></label>
+                  </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.storage_location_code.$invalid && !form2.storage_location_code.$pristine }">
+                        <input class="form-control" type="text" maxlength="20" name="storage_location_code" ng-model="storage.storage_location_code" required>
+                          <span ng-show="!form2.storage_location_code.$pristine && form2.storage_location_code.$invalid" class="help-block label">Storage Location Code Required</span>
+                    </div>
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >Storage Location Name<span style="color:red">*</span></label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.storage_location_name.$invalid && !form2.storage_location_name.$pristine }">
+                    <input type="text" required name="storage_location_name" maxlength="20" ng-model="storage.storage_location_name" class="form-control">
+                    <span ng-show="!form2.storage_location_name.$pristine && form2.storage_location_name.$invalid" class="help-block label">Storage Location Name Required</span>
+                  </div> -->
+
+                </div>
+
+
+               <div class="table-responsive small-top" ng-init="">
+              <table id="exportCreateIndent" class="table table-striped table-bordered" border="1">
+                <thead>
+                  <tr style="float: center;background-color: #CFD8DC;">     
+                    <th class="text-center">Sr No</th>
+                    <th class="text-center">Storage Location Code</th>
+                    <th class="text-center">Storage Location Name</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">  
+                  <tr ng-show="addStorageData">            
+                    <td></td>
+                    <td><input class="form-control" type="text" maxlength="20" name="storage_location_code" ng-model="storagecn.storage_location_code" required>
+                    <span ng-show="!form2.storage_location_code.$pristine && form2.storage_location_code.$invalid" class="help-block label">Storage Location Code Required</span></td>                   
+                    <td><input type="text" required name="storage_location_name" maxlength="50" ng-model="storagecn.storage_location_name" class="form-control">
+                    <span ng-show="!form2.storage_location_name.$pristine && form2.storage_location_name.$invalid" class="help-block label">Storage Location Name Required</span></td>
+                    <td><button ng-disabled="!storagecn.storage_location_code || !storagecn.storage_location_name" type="submit" data-ng-click="addStorageName();" class="btn btn-info btn-xs"><span>Add</span></button></td>                     
+                  </tr>
+
+                  <tr ng-repeat="storage in storageList">
+                    <td>{{$index+1}}</td>
+                    <td><span data-ng-hide="editMode">{{storage.storage_location_code}}</span>
+                    <input class="form-control" type="text" maxlength="20" name="storage_location_code" data-ng-model="storage.storage_location_code" data-ng-show="editMode">
+                    </td>
+                    <td><span data-ng-hide="editMode">{{storage.storage_location_name}}</span>
+                      <input class="form-control" type="text" maxlength="20" name="storage_location_code" data-ng-model="storage.storage_location_name" data-ng-show="editMode"></td>
+                    <td>
+                       <button class="btn btn-xs btn-warning" data-ng-hide="editMode" data-ng-click="editMode = true; editAppKey(entry)">Edit</button>
+                      <button type="submit" data-ng-show="editMode" data-ng-click="editMode = false;" class="btn btn-success btn-xs"><span >Update</span></button>
+                      <button class="btn btn-xs btn-danger" ng-click="deleteStorageName($index)">Delete</button></td>
+                  </tr>
+                </tbody>
+              </table>   
+            </div>
+              </fieldset>
+            </form>
+
+            <div class="row" >
+              <div  align="center">
+                <h2></h2>
+                <button ng-show="addStorageData" class="btn btn-primary" ng-click="form2.project_id.$pristine=false;form2.store_id.$pristine=false;form2.storage_location_code.$pristine=false;form2.storage_location_name.$pristine=false;saveStorage(!form2.$invalid);">Submit</button>
+                <button ng-hide="addStorageData" class="btn btn-primary"
+                ng-click="form2.project_id.$pristine=false;form2.store_id.$pristine=false;form2.storage_location_code.$pristine=false;form2.storage_location_name.$pristine=false;updateStorage(!form2.$invalid);">Update</button>
+                <button class="btn btn-danger" ng-click="hideAddStorageForm();form2.project_id.$pristine=true;
+        form2.store_id.$pristine=true;">Cancel</button>
+              </div>
+            </div><br>
+          </div>      
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

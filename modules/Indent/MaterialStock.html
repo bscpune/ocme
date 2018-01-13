@@ -1,0 +1,109 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    Inventory Stock
+  </div>
+
+  <div class="panel-body">
+      <div  class="row" ng-init="getProjectNameList();getStoreNameList();getContractorNameList();">
+          <div class="row">
+            <form name="dateForm">
+              <div class="row small-top" style="margin-left: 05px;">
+                <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getProjectNameList();">
+                      <label >Project Name<span style="color:red">*</span></label>
+                  </div>
+                <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+                  <select class="form-control" required name='project_id' type="text" style="text-align:left;" ng-model="materialstock.project_id" ng-options="i.project_id as i.project_name for i in projectNameList | orderBy : 'project_name'" ng-change=getStoreList1(materialstock.project_id); ng-disabled="viewUpdateButton || updateField"></select>
+                <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">Project Name Required</span>
+                </div>
+
+                  <div class="col-xs-6 col-sm-6 col-md-1" ng-init="">
+                  <label >Store Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.store_id.$invalid && !form2.store_id.$pristine }">
+                <select class="form-control" required name='store_id' type="text" style="text-align:left;" ng-model="materialstock.store_id" ng-options="i.store_id as i.store_name for i in storeNameList | orderBy : 'project_name'" ng-change="" ng-disabled="viewUpdateButton || updateField"></select>
+                <span ng-show="!form2.store_id.$pristine && form2.store_id.$invalid" class="help-block label">Store Name Required</span>
+             </div>
+
+              <div class="col-xs-6 col-sm-6 col-md-1">
+                <label>Contractor Name</label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.contractor_id.$invalid && !form2.contractor_id.$pristine }">
+                <select class="form-control" required name='contractor_id' type="text" ng-model="materialstock.contractor_id" ng-options="i.contractor_id as i.contractor_name for i in contractorNameList | orderBy : 'contractor_name'" ></select>
+                <span ng-show="!form2.contractor_id.$pristine && form2.contractor_id.$invalid" class="help-block label">Contractor Name Required</span>
+              </div>
+                
+              <div class="col-xs-6 col-sm-6 col-md-2" style="color: #0598DD; margin-top: 2px;">
+                <button data-toggle="tab" class="btn-xs btn-default glyphicons glyphicons-search" class="btn-sm" aria-hidden="true" ng-disabled="form2.$invalid" ng-click="getMaterialStockList(materialstock.project_id,materialstock.store_id,materialstock.contractor_id,materialstock.inventory_type_id);" style="width: 70%;">Search</button>
+              </div>
+             </div>
+
+                </div><br/>
+                </form>
+                </div>
+  
+      </div> 
+    </div>
+
+
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary" >
+
+  <div class="panel-body" ng-init="">
+  <div class="panel panel-info">
+  <div class="small-top">
+
+    <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+        <thead>
+          <tr>     
+            <th class="text-center">Sr No</th>
+            <th class="text-center">Project Name<input type="text" name="project_name" tooltip="Please Enter Project Name" ng-model="search.project_name" class="form-control"/></th>
+            <th class="text-center">Store Name<input type="text" name="store_name" tooltip="Please Enter Store Name" ng-model="search.store_name" class="form-control"/></th>
+           
+            <th class="text-center">Material Code<input type="text" name="material_code" tooltip="Please Enter Material Code" ng-model="search.material_code" class="form-control"/></th>
+           
+            <th class="text-center">Material Description<input type="text" name="material_description" tooltip="Please Enter Material Description" ng-model="search.material_description" class="form-control"/></th>
+            <th class="text-center">UOM<input type="text" name="unit_of_measurment" tooltip="Please Enter Project Name" ng-model="search.unit_of_measurment" class="form-control"/></th>
+            <th class="text-center">Unit Price<input type="text" name="unit_price" tooltip="Please Enter Unit Price" ng-model="search.unit_price" class="form-control"/></th>
+             <th class="text-center">Stock Quantity<input type="text" name="accepted_quantity" tooltip="Please Enter Quantity" ng-model="search.remaining_qty" class="form-control"/></th>
+            <th class="text-center">Expiry Status<input type="text" name="expiry_status" tooltip="Please Enter Expiry Status" ng-model="search.expiry_status" class="form-control"/></th>
+            <th class="text-center">Inventory Type<input type="text" name="inventory_type_id" tooltip="Please Enter Inventory Type" ng-model="search.inventory_type_id" class="form-control"/></th>
+          </tr>
+
+        </thead>
+        <tbody class="text-center">
+          <tr ng-repeat="m in materialstockList | filter: search">            
+            <td>{{ $index + 1 }}</td>
+            <td>{{m.project_name}}</td>
+            <td>{{m.store_name}}</td>
+            <td>{{m.material_number}}</td>
+           
+            <td>{{m.material_description}}</td>
+            <td>{{m.unit_of_measurment}}</td>
+            <td>{{m.unit_price}}</td>
+             <td>{{m.remaining_qty}}</td>
+            <td>{{m.expiry_status}}</td>
+            <td>{{m.inventory_type_id}}</td>
+          </tr>
+        </tbody>
+      </table>   
+    </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
+
+
+
+  

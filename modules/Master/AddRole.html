@@ -1,0 +1,205 @@
+<div class="row" ng-hide="addUserForm">
+<div class="panel panel-info">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      User Role List
+      <button  class="btn-md button btn-default fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.user_role.$pristine=true;form2.discription.$pristine=true;form2.email_id.$pristine=true;form2.user_name.$pristine=true;form2.password.$pristine =true;form2.user_role.$pristine=true;form2.dept_id.$pristine=true;showAddUserForm();">Add New Role</button>
+    </div>
+  </div>
+    <div class="row table-responsive" >
+    <fieldset class="scheduler-border contain" ng-init="getUserRole();" style="margin-right: 18px; margin-left: 15px;">
+
+      <table id="" class="table table-bordered" border="1" fixed-header> 
+        <thead>
+        <tr style="float: center;background-color: #CFD8DC;">
+          <th class="text-center">Sr No</th>
+          <th class="text-center">Role</th>
+           <th class="text-center">Description</th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        <tr ng-repeat="user in userRole">
+          <td>{{ $index + 1 }}</td>
+          <td>{{user.user_role}}</td>
+          <td>{{user.description}}</td>
+          
+         
+        </tr>
+        </tbody>
+
+      </table>   
+    </fieldset>
+    </div>
+  </div>
+</div>
+
+    
+<div class="panel panel-primary" ng-show="addUserForm">
+  <div class="panel-heading" >
+    Add New User
+  </div>
+   <div class="panel-heading" ng-hide="addUserData">
+    Update User
+   </div>
+  <div class="panel-body">
+  <div class="panel panel-info">
+  <div class="panel-body">
+
+    <div class="row" ng-init="getDepartmentList();getUserRoleList();">
+    <form name="form2" class="form" novalidate>           
+    <fieldset>
+
+      <div class="row small-top">
+      <div class="col-xs-6 col-sm-6 col-md-1">
+        
+          <label>Role Name<span style="color:red">*</span></label></div>
+          <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.user_role.$invalid && !form2.user_role.$pristine }">
+          <input type="text" required name="user_role" ng-model="user.user_role" class="form-control ">
+          <span ng-show="!form2.user_role.$pristine && form2.user_role.$invalid" class="help-block label">User Name Required</span>
+        </div>
+
+ <div class="col-xs-6 col-sm-6 col-md-1">
+        
+          <label>Description<span style="color:red">*</span></label></div>
+          <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.user_name.$invalid && !form2.user_name.$pristine }">
+          <input type="text" required name="discription" ng-model="user.discription" class="form-control ">
+          <span ng-show="!form2.user_name.$pristine && form2.user_name.$invalid" class="help-block label">User Name Required</span>
+        </div>
+
+       
+      </div>
+      <div class="row small-top">
+      <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Master Data<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.master_data.$invalid && !form2.master_data.$pristine }">
+       <input type="checkbox" name="add" ng-model="user.master_data.add" value="0">Add 
+          <input type="checkbox" name="edit" ng-model="user.master_data.edit" value="1">Edit<br>
+          <input type="checkbox" name="delete" ng-model="user.master_data.delete" value="2">Delete
+          <input type="checkbox" name="view" ng-model="user.master_data.view" value="3">View
+            <span ng-show="!form2.master_data.$pristine && form2.master_data.$invalid" class="help-block label">Required</span>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Inventory<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.inventory.$invalid && !form2.inventory.$pristine }">
+         <input type="checkbox" name="add" ng-model="user.inventory.add" value="0">Add 
+          <input type="checkbox" name="edit" ng-model="user.inventory.edit" value="1">Edit<br>
+          <input type="checkbox" name="delete" ng-model="user.inventory.delete" value="2">Delete
+          <input type="checkbox" name="view" ng-model="user.inventory.view" value="3">View
+          <span ng-show="!form2.inventory.$pristine && form2.inventory.$invalid" class="help-block label">Required</span>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Indent<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.indent.$invalid && !form2.indent.$pristine }">
+          <input type="checkbox" name="add" ng-model="user.indent.add" value="0">Add 
+          <input type="checkbox" name="edit" ng-model="user.indent.edit" value="1">Edit<br>
+          <input type="checkbox" name="delete" ng-model="user.indent.delete" value="2">Delete
+          <input type="checkbox" name="view" ng-model="user.indent.view" value="3">View
+         <span ng-show="!form2.indent.$pristine && form2.indent.$invalid" class="help-block label">Required</span>
+        </div>
+      </div>
+      <div class="row small-top">
+      <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Gate Entry<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.gate_entry.$invalid && !form2.gate_entry.$pristine }">
+          <input type="checkbox" name="add" ng-model="user.gate_entry.add" value="0">Add 
+          <input type="checkbox" name="edit" ng-model="user.gate_entry.edit" value="1">Edit<br>
+          <input type="checkbox" name="delete" ng-model="user.gate_entry.delete" value="2">Delete
+          <input type="checkbox" name="view" ng-model="user.gate_entry.view" value="3">View
+         <span ng-show="!form2.gate_entry.$pristine && form2.gate_entry.$invalid" class="help-block label">Required</span>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Material Receipt Report<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.material_receipt.$invalid && !form2.material_receipt.$pristine }">
+         <input type="checkbox" name="add" ng-model="user.material_receipt.add" value="0">Add 
+          <input type="checkbox" name="edit" ng-model="user.material_receipt.edit" value="1">Edit<br>
+          <input type="checkbox" name="delete" ng-model="user.material_receipt.delete" value="2">Delete
+          <input type="checkbox" name="view" ng-model="user.material_receipt.view" value="3">View
+          <span ng-show="!form2.material_receipt.$pristine && form2.material_receipt.$invalid" class="help-block label">Required</span>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Material Rejection<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.material_rejection.$invalid && !form2.material_rejection.$pristine }">
+         <input type="checkbox" name="add" ng-model="user.material_rejection.add" value="0">Add 
+          <input type="checkbox" name="edit" ng-model="user.material_rejection.edit" value="1">Edit<br>
+          <input type="checkbox" name="delete" ng-model="user.material_rejection.delete" value="2">Delete
+          <input type="checkbox" name="view" ng-model="user.material_rejection.view" value="3">View
+          <span ng-show="!form2.material_rejection.$pristine && form2.material_rejection.$invalid" class="help-block label">Required</span>
+        </div>
+      </div>
+      
+      <div class="row small-top">
+      <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Material Issue<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.material_issue.$invalid && !form2.material_issue.$pristine }">
+          <input type="checkbox" name="add" ng-model="user.material_issue.add" value="0">Add 
+          <input type="checkbox" name="edit" ng-model="user.material_issue.edit" value="1">Edit<br>
+          <input type="checkbox" name="delete" ng-model="user.material_issue.delete" value="2">Delete
+          <input type="checkbox" name="view" ng-model="user.material_issue.view" value="3">View
+         <span ng-show="!form2.material_issue.$pristine && form2.material_issue.$invalid" class="help-block label">Required</span>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Material Transfer Note<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.material_transfer.$invalid && !form2.material_transfer.$pristine }">
+          <input type="checkbox" name="add" ng-model="user.material_transfer.add" value="0">Add 
+         <input type="checkbox" name="edit" ng-model="user.material_transfer.edit" value="1">Edit<br>
+          <input type="checkbox" name="delete" ng-model="user.material_transfer.delete" value="2">Delete
+          <input type="checkbox" name="view" ng-model="user.material_transfer.view" value="3">View
+         <span ng-show="!form2.material_transfer.$pristine && form2.material_transfer.$invalid" class="help-block label">Required</span>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Material Return<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.material_return.$invalid && !form2.material_return.$pristine }">
+         <input type="checkbox" name="add" ng-model="user.material_return.add" value="0">Add 
+          <input type="checkbox" name="edit" ng-model="user.material_return.edit" value="1">Edit<br>
+          <input type="checkbox" name="delete" ng-model="user.material_return.delete" value="2">Delete
+          <input type="checkbox" name="view" ng-model="user.material_return.view" value="3">View
+          <span ng-show="!form2.material_return.$pristine && form2.material_return.$invalid" class="help-block label">Required</span>
+        </div>
+         <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Reports<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.reports.$invalid && !form2.reports.$pristine }">
+         <input type="checkbox" name="add" ng-model="user.reports.add" value="0">Add 
+          <input type="checkbox" name="edit" ng-model="user.reports.edit" value="1">Edit<br>
+          <input type="checkbox" name="delete" ng-model="user.reports.delete"value="2">Delete
+          <input type="checkbox" name="view" ng-model="user.reports.view" value="3">View
+          <span ng-show="!form2.reports.$pristine && form2.reports.$invalid" class="help-block label">Required</span>
+        </div>
+      </div>
+       
+       
+    </fieldset>
+    </form>
+          
+    <div class="row" >
+    <div align="center">
+      <h2></h2>
+      <button class="btn btn-primary" ng-show="addUserData" ng-click="form2.user_fullname.$pristine=false;form2.mobile_number.$pristine=false;form2.email_id.$pristine=false;form2.user_name.$pristine=false;form2.password.$pristine =false;form2.user_role.$pristine=false;saveRole1(!form2.$invalid);">Submit</button>
+      <button class="btn btn-primary" ng-hide="addUserData" ng-click="form2.user_fullname.$pristine=false;form2.mobile_number.$pristine=false;form2.email_id.$pristine=false;form2.user_name.$pristine=false;form2.password.$pristine =false;form2.user_role.$pristine=false;updateUser(!form2.$invalid);">Update</button>
+      <button class="btn btn-danger" ng-click="hideAddUserForm();">Cancel</button>
+    </div>
+    </div>  
+
+    </div> 
+
+  </div>
+  </div>
+  </div>
+</div>
+

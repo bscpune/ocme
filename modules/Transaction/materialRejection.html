@@ -1,0 +1,242 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary">
+    
+      <div class="panel-heading" ng-hide="addMRRForm">
+      Material Rejection
+        <!-- <button  class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="showAddMRRForm();">
+      New MRR</button> -->
+      </div>
+    
+    <div class="panel-body" ng-init="getMRRList();">
+    <div class="panel panel-info" ng-hide="addMRRForm">
+
+    <div class="row">
+        <br/>
+        <div class="col-xs-6 col-sm-6 col-md-9" style="padding-left: 20px;">
+          </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label><i class="glyphicon glyphicon-search"></i>Search</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" name="Search" ng-model="searchKeyword" class="form-control"/>
+        </div>
+      </div>
+    <div class="small-top">
+      <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+        <thead>
+            <th class="text-center">Sr No</th>
+            <th class="text-center">MRR Number</th>
+            <th class="text-center">Gate Entry No</th>
+            <th class="text-center">Material Rejection Note No</th>
+            <th class="text-center">Material Rejection Date</th>
+            <th class="text-center">Total Quantity</th>
+            <th class="text-center">Rejected Quantity</th>
+            <th class="text-center">Rejection Status</th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="mr in mrrList | filter: searchKeyword">            
+              <td>{{$index+1}}</td>
+              <td><a href="" ng-click="getMrDetails1(mr.mrr_id);">{{mr.mrr_code}}</a></td>
+              <td>{{mr.gate_entry_code}}</td>
+              <td>{{mr.material_rejection_code}}</td>
+              <td>{{mr.rejection_date}}</td>
+              <td>{{mr.total_quantity}}</td>
+              <td>{{mr.total_rejected_quantity}}</td>
+              <td><button class="btn btn-info btn-xs" ng-if="mr.rejection_status=='reject'" type="submit" ng-click="getMrDetails(mr.mrr_id);">Return Material</button><div ng-if="mr.rejection_status==='Return'">{{mr.rejection_status}}</td>
+            </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    </div>
+    </div>
+    <div class="panel-heading" ng-show="addMRRForm">
+    Material Rejection
+    </div>
+    <div class="panel-body" ng-show="addMRRForm">
+      <div class="panel panel-info">
+        <form name="form2" class="form" novalidate>
+          
+            <div class="row small-top" ng-init="getGateEntryCodeList();">
+              <fieldset>
+                <legend><font style="color: #0598DD;">Material Rejection Details</font></legend>
+                  <div class="row small-top" style="margin-left: 10px;">
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                      <label>Material Rejection Note No<span style="color:red">*</span></label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input type="text" style="text-align:left;" name="material_rejection_code" ng-model="mrr.material_rejection_code" class="form-control" readonly/>
+                    </div>
+
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                      <label>Material Rejection Date</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <div class="datepicker" date-format="dd-MM-yyyy"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                        <input ng-model="mrr.rejection_date" style="text-align:left;" type="text" class="form-control angular-datepicker-input" name="rejection_date" readonly />
+                      </div>
+                  </div>
+
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                      <label>MRR Number<span style="color:red">*</span></label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input type="text" name="mrr_code" style="text-align:left;" ng-model="mrr.mrr_code" class="form-control" readonly/>
+                    </div>
+
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                      <label>MRR Date</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <div class="datepicker" date-format="dd-MM-yyyy"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                        <input ng-model="mrr.mrr_date" style="text-align:left;" placeholder="dd-MM-yyyy" type="text" class="form-control angular-datepicker-input" name="mrr_date" ng-disabled="supplier" readonly/>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row small-top" style="margin-left: 10px;">
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                      <label >Gate Entry No.</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input class="form-control" name='gate_entry_code' style="text-align:left;" type="text" ng-model="mrr.gate_entry_code" ng-disabled="supplier"></input>
+                    </div>
+
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                     <label >Project Name</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input class="form-control" name='project_name' style="text-align:left;" type="text" ng-model="mrr.project_name" readonly>
+                    </div>
+
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                     <label >Store Name</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input class="form-control" name='store_name' style="text-align:left;" type="text" ng-model="mrr.store_name" readonly>
+                    </div>
+                
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                     <label >Inventory Type</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input class="form-control" name='inventory_type' style="text-align:left;" type="text" ng-model="mrr.inventory_type_id" readonly>
+                    </div>   
+                  </div>
+
+                  <div class="row small-top" style="margin-left: 10px;">
+
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                      <label >Supplier Name</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input type="text" name="supplier_name" style="text-align:left;" ng-model="mrr.supplier_name" class="form-control" ng-disabled="supplier">
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                      <label>Supplier Invoice No.</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input type="text" name="supplier_invoice_no" style="text-align:left;" class="form-control" ng-model="mrr.supplier_invoice_no" ng-disabled="supplier">
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                      <label>Location of Dispatch</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input class="form-control" type="text" style="text-align:left;" name="location_of_despatch" ng-model="mrr.location_of_despatch" ng-disabled="supplier">
+                    </div>
+                  </div>
+
+                  <div class="row small-top" style="margin-left: 10px;">
+                   <div class="col-xs-6 col-sm-6 col-md-1">
+                     <label >Transportor Name</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input class="form-control" style="text-align:left;" name='transporter_name' type="text" ng-model="mrr.transporter_name" readonly>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                      <label>Vehicle No.</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2" >
+                      <input type="text" class="form-control" style="text-align:left;" ng-model="mrr.vehicle_no" name="vehicle_no" readonly/>               
+                    </div>
+
+  
+                    <div class="col-xs-6 col-sm-6 col-md-1">
+                      <label >LR No.</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <input type="text" class="form-control" style="text-align:left;" ng-model="mrr.lr_no" name="lr_no" readonly/> 
+                    </div>
+
+                    <!-- <div class="col-xs-6 col-sm-6 col-md-1">
+                        <label>Remark</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <textarea class="form-control" type="text" name="remark" ng-model="mrr.remark" ng-disabled="supplier"></textarea>
+                    </div> -->
+                  </div>
+                    
+                  <div class="table-responsive small-top" ng-init="">
+                    <table id="exportmaterial" class="table table-striped table-bordered" border="1">
+                      <thead>
+                        <tr style="float: center;background-color: #CFD8DC;">     
+                          <th class="text-center">Sr No</th>
+                          <th class="text-center">Material No.</th>
+                          <th class="text-center">Material Description</th>
+                          <th class="text-center">UOM</th>
+                          <th class="text-center">Quantity</th>
+                          <th class="text-center">Rejected Quantity</th>
+                          <th class="text-center">Reason for Rejection<span style="color:red">*</span></th>
+                        </tr>
+                      </thead>
+                      <tbody class="text-center">
+
+                        <tr ng-repeat="ind in materialList">
+                          <td>{{$index+1}}</td>
+                          <td>{{ind.material_number}}</td>
+                          <td>{{ind.material_description}}</td>
+                          <td>{{ind.unit_of_measurement}}</td>
+                          <td>{{ind.quantity}}</td>
+                          <!-- <td><input class="form-control table-input" type="text" ng-model="ind.accepted_quantity" onkeypress="return isNumberKey(event)" ng-disabled="supplier"/></td> -->
+                          <td><input class="form-control" type="text" ng-model="ind.rejected_quantity" onkeypress="return isNumberKey(event)" ng-disabled="supplier"/></td>
+
+                          <td><div ng-class="{ 'has-error' : form2.reason_for_rejection.$invalid && !form2.reason_for_rejection.$pristine }"><input class="form-control" type="text" required name="reason_for_rejection" ng-model="ind.reason_for_rejection"/><span ng-show="!form2.reason_for_rejection.$pristine && form2.reason_for_rejection.$invalid" class="help-block label">Reason For Rejection Required</span></div></td>
+
+
+                          <!-- <td ng-show="addNewIndentData"><button class="btn btn-xs btn-danger" ng-click="deleteIndentMaterial($index)">Delete</button></td>
+                          <td ng-hide="addNewIndentData"><button class="btn btn-info btn-xs" type="submit" data-ng-hide="editMode" data-ng-click="editMode = true; editAppKey(entry)">Edit</button>
+                          <button type="submit" data-ng-show="editMode" data-ng-click="editMode = false;updateIndentMaterial(ind.indent_material_id,ind.quantity)" class="btn btn-success btn-xs"><span >Update</span></button>
+                          <button data-ng-show="editMode" data-ng-click="editMode = false;" class="btn btn-danger btn-xs"><span >Cancel</span></button>
+                          </td> -->
+                        </tr>
+                      </tbody>
+                    </table>   
+                  </div>
+
+                  <div class="row" >
+                    <div align="center">
+                      <button ng-show="addMRRData" class="btn btn-primary"
+                      ng-click="form2.reason_for_rejection.$pristine=false;saveMaterialRejection(!form2.$invalid);">Return Material</button>
+                      <!-- <button ng-show="showpdf" class="btn btn-info" ng-click="genrateMrrPDF(mrr.mrr_id);">Print</button> -->
+                      <button class="btn btn-info"  ng-click="genrateMaterialrejectionPDF(mrr.mrr_id);">Print</button>
+                      <button class="btn btn-danger" ng-click="hideAddMRRForm();">Cancel</button>
+                    </div>
+                  </div></br>
+              </fieldset>
+            </div>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,128 @@
+<div class="row" ng-hide="addBomForm">
+<div class="panel panel-info">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      BOM Master
+      <button  class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="showAddBomForm();">
+      Upload New BOM </button>
+    </div>
+  </div>
+
+  <div class="row table-responsive">
+  <fieldset class="scheduler-border contain" ng-init="getExcelList();" style="margin-right: 18px; margin-left: 15px;">
+
+    <table id="exportHODash" class="table table-bordered" border="1" fixed-header> 
+      <thead>
+        <tr style="float: center;">
+          <th class="text-center">Sr.No.</th>
+          <th class="text-center">BOM Name</th>
+          <th class="text-center">Sand/Soil Type</th>
+          <th class="text-center">Tower Type</th>
+          <th class="text-center">Activity</th>
+          <th class="text-center">File Name</th>
+       </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="bo in bomList">
+          
+          <td>{{$index+1}}</td>
+          <td>{{bo.bom_name}}</td>
+          <td>{{bo.soil_type}}</td>
+          <td>{{bo.tower_type}}</td>
+          <td>{{bo.activity_id}}</td>
+          <td>{{bo.file_name}}</td>
+          
+  
+          <!-- <td><a style="color:red" href=""><button class="btn-xs button " style="background-color:skyblue;" ng-click="deleteAct(!form2.$invalid,act.activity_id);"><i class="glyphicon glyphicon-trash"></i></button></a></td> -->
+        </tr>
+      </tbody>
+
+    </table>   
+  </fieldset>
+  </div>
+</div>
+</div>
+
+<div class="row" dw-loading="loader" ng-show="addBomForm">
+
+  <div class="panel panel-primary" >
+    <div class="panel-heading" ng-show="addBomData">
+      Add New BOM
+    </div>
+    <div class="panel-heading" ng-hide="addBomData">
+      Update BOM
+    </div>
+    <div class="panel panel-info">
+    <div class="panel-body">
+
+    <div  class="row" ng-init="">
+    <form name="form2" class="form" novalidate>           
+    <fieldset>
+    
+      <legend><font style="color: #0598DD;">Bom Details</font></legend>
+    <div  class="row small-top" ng-init="">
+      <div class="col-xs-6 col-sm-6 col-md-1">
+        <label >BOM Name<span style="color:red">*</span></label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.siteid.$invalid && !form2.siteid.$pristine }">
+        <input type="text" required name="bom_name" ng-model="bom.bom_name" class="form-control"/>
+        <span ng-show="!form2.siteid.$pristine && form2.siteid.$invalid" class="help-block label">BOM Name Required</span>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-1">
+        <label >Sand/Soil Type<span style="color:red">*</span></label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.materialid.$invalid && !form2.materialid.$pristine }">
+        <select type="text" required name="soil_type" ng-model="bom.soil_type" class="form-control">
+          <option>Sandy soil</option>
+          <option>Clay soil</option>
+          <option>Silt soil</option>
+          <option>Peat soil</option>
+          <option>Saline Soil</option>
+          <option>Loam soil</option>
+        </select>
+        <span ng-show="!form2.soil_type.$pristine && form2.soil_type.$invalid" class="help-block label">Sand/Soil Type Required</span>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-1">
+        <label>Tower Type<span style="color:red">*</span></label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.quantity.$invalid && !form2.quantity.$pristine }">
+        <input type="text" required name="tower_type" ng-model="bom.tower_type" class="form-control">
+        <span ng-show="!form2.tower_type.$pristine && form2.tower_type.$invalid" class="help-block label">Tower Type is Required</span>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getActivityNameList();">
+        <label >Acivity<span style="color:red">*</span></label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.activityid.$invalid && !form2.activityid.$pristine }">
+        <select type="text" required name="activityid" ng-model="bom.activity_id" class="form-control" ng-options="b.activity_id as b.activity_name for b in activityNameList | orderBy : 'activity_name'"></select>
+        <span ng-show="!form2.activityid.$pristine && form2.activityid.$invalid" class="help-block label">Acivity Id Required</span>
+      </div>
+      </div>
+      <div class="row small-top">  
+          <div class="col-xs-6 col-sm-6 col-md-1">
+            <label>UplaodFile:</label>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-2">
+            <input type="file" file-input="files"/>
+          </div>
+      </div>
+      
+    </fieldset>
+    
+  </form>
+
+  <div class="row" >
+    <div  align="center">
+      <h2></h2>
+      <button ng-disabled="!SelectedFileForUpload" class="btn btn-primary" ng-click="uploadFile()">Submit</button>
+      <!-- <button ng-hide="addBOMData" class="btn btn-info" ng-click="updateBOM(!form2.$invalid);">Update</button> -->
+      <button class="btn btn-danger" ng-click="hideAddBomForm();">Cancel</button>
+    </div>
+  </div><br>
+  
+  </div>
+
+          
+  </div>
+  </div>
+  </div>
+</div>

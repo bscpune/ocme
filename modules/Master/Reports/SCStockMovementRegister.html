@@ -1,0 +1,148 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary" >
+
+  <div class="panel-heading">
+    SubContractor Stock Movement Register
+  </div><br/>
+
+  <div class="panel-body">
+    <div class="row" ng-init="getProjectNameList();getStoreNameList();getMaterialNameList();">
+          <div class="row">
+            <form name="dateForm">
+              <div class="row small-top" style="margin-left: 10px;">
+                  <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getProjectNameList();">
+                      <label >Project Name<span style="color:red">*</span></label>
+                  </div>
+                <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+                  <select class="form-control" required name='project_id' type="text" style="text-align:left;" ng-model="gateinwardregister.project_id" ng-options="i.project_id as i.project_name for i in projectNameList | orderBy : 'project_name'" ng-change=getStoreList1(gateinwardregister.project_id); ng-disabled="viewUpdateButton || updateField"></select>
+                <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">Project Name Required</span>
+                </div>   
+
+                <div class="col-xs-6 col-sm-6 col-md-1" ng-init="">
+                  <label >Store Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.store_id.$invalid && !form2.store_id.$pristine }">
+                <select class="form-control" required name='store_id' type="text" style="text-align:left;" ng-model="gateinwardregister.store_id" ng-options="i.store_id as i.store_name for i in storeNameList | orderBy : 'project_name'" ng-disabled="viewUpdateButton || updateField"></select>
+                <span ng-show="!form2.store_id.$pristine && form2.store_id.$invalid" class="help-block label">Store Name Required</span>
+             </div>
+
+
+
+                  <div class="col-xs-6 col-sm-6 col-md-1" >
+                    <label>Stock Type</label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" >
+                   <select class="form-control" ng-model="scstockmovementregister.inventory_type" ng-disabled="Invoicedetails" name="stock_type" required>
+                     <option>Emco Stock</option>
+                     <option>Customer Stock</option>
+                     <option>T&P Stock</option>
+                     <option>OSM Stock</option>
+                  </select> 
+                  </div>
+          
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >Material Name</label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.material_id.$invalid && !form2.material_id.$pristine }">
+                    <select class="form-control" required name='material_id' type="text" ng-model="gateinwardregister.material_id" ng-options="s.material_id as s.material_name for s in materialNameList | orderBy : 'material_name'"></select>
+                    <span ng-show="!form2.material_id.$pristine && form2.material_id.$invalid" class="help-block label">material Name Required</span>
+                  </div>
+              </div>    
+
+              <div class="row small-top" style="margin-left: 10px;">
+                  <!-- <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >Party Name</label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+                    <select class="form-control" required name='project_id' type="text" ng-model="inwardregister.project_id" ng-options="s.project_id as s.project_name for s in projectNameList | orderBy : 'project_name'"></select>
+                    <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">party Name Required</span>
+                  </div> -->
+
+
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label>From Date</label>
+                  </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <div class="datepicker"  date-format="dd-MM-yyyy" button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                     <input ng-model="scstockmovementregister.from_date" placeholder="DD-MM-YYYY" name="fromdate" ng-change="DateChecker(recordPurchaseOrderAddition.txtPODate,recordPurchaseOrderAddition.txtDeliveryDate);" required type="text" class="form-control angular-datepicker-input" required tooltip="{{(dateForm.fromdate.$invalid) ?  'Date required.' : ''}}"/>
+                      </div>
+                    </div>
+            
+
+           
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >To Date</label>
+                  </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2"> 
+                      <div class="datepicker"  date-format="dd-MM-yyyy" button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                     <input ng-model="scstockmovementregister.to_date" placeholder="DD-MM-YYYY" name="todate" ng-change="DateChecker(recordPurchaseOrderAddition.txtPODate,recordPurchaseOrderAddition.txtDeliveryDate);" required type="text" class="form-control angular-datepicker-input" required tooltip="{{(dateForm.todate.$invalid) ?  'Date required.' : ''}}"/>
+                     </div>
+                  </div>
+              
+              <div class="col-xs-6 col-sm-6 col-md-2" style="color: #0598DD; margin-top: 2px;">
+                  <button class="btn-sm" aria-hidden="true" ng-disabled="form2.$invalid" ng-click="getScstockmovementregisterList();" style="width: 70%;">Search</button>
+              </div> 
+
+                </div><br/>
+                </form>
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+      
+  <div class="panel-body" ng-init="getScstockmovementregisterList()" >
+  <div class="panel panel-info">
+  <div class="small-top">
+
+    <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-striped table-bordered dt-responsive nowrap">
+        <thead>
+          <tr style="float: center;background-color: #CFD8DC;">     
+            <th class="text-center">Sr.No</th>
+            <th class="text-center">LOC No</th>
+            <th class="text-center">Issue Date</th>
+            <th class="text-center">Material Name</th>
+            <th class="text-center">Issue QTY</th>
+            <th class="text-center">JMC NO.</th>
+            <th class="text-center">Consumed QTY</th>
+            <th class="text-center">Return Date</th>
+            <th class="text-center">Return QTY</th>
+            <th class="text-center">BAL. QTY</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+         <tr ng-repeat="i in scstockmovementregisterList">            
+            <td>{{ $index + 1 }}</td>
+            <td>{{i.loc_no}}</td>
+            <td>{{i.material_issue_date}}</td>
+            <td>{{i.material_name}}</td>
+            <td>{{i.issued_qty}}</td>
+            <td>{{i.jmc_number}}</td>
+            <td>{{i.consumed_qty}}</td>
+            <td>{{i.material_return_date}}</td>
+            <td>{{i.return_qty}}</td>
+            <td>{{i.issued_qty}}</td>
+          </tr>
+        </tbody>
+      </table>   
+    </div>
+    </div>
+    </div>
+  </div>
+
+  
+
+

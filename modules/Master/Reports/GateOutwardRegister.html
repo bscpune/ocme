@@ -1,0 +1,136 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary" >
+
+  <div class="panel-heading">
+    Gate Outward Register
+  </div><br/>
+
+  <div class="panel-body">
+    <div class="row" ng-init="getMaterialNameList();">
+          <div class="row">
+            <form name="dateForm">
+              <div class="row small-top" style="margin-left: 10px;">
+                  <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getProjectNameList();">
+                      <label >Project Name</label>
+                  </div>
+                <div class="col-xs-6 col-sm-6 col-md-2" >
+                  <select class="form-control"  name='project_id' type="text" style="text-align:left;" ng-model="gateoutwardregister.project_id" ng-options="i.project_id as i.project_name for i in projectNameList | orderBy : 'project_name'" ng-change=getStoreList1(gateoutwardregister.project_id); ></select>
+                </div>   
+
+                <div class="col-xs-6 col-sm-6 col-md-1" ng-init="">
+                  <label >Store Name</label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" >
+                <select class="form-control"  name='store_id' type="text" style="text-align:left;" ng-model="gateoutwardregister.store_id" ng-options="i.store_id as i.store_name for i in storeNameList | orderBy : 'project_name'" ></select>
+             </div>
+
+
+                  <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getInventoryTypeList();">
+          <label >Inventory Type</label>
+         </div>
+         <div class="col-xs-6 col-sm-6 col-md-2" >
+          <select class="form-control" style="text-align:left;" ng-model="gateoutwardregister.inventory_type_id"  name="inventory_type_id" ng-options="i.inventory_type_id as i.inventory_type_name for i in inventoryTypeList | orderBy : 'inventory_type_name'" >
+          </select>
+          </div>
+             
+           <div class="col-xs-6 col-sm-6 col-md-1">
+            <label >Challan /Invoice Number</label>
+          </div>
+          <div class="col-xs-6 col-sm-6 col-md-2" >
+           <input type="text" class="form-control" style="text-align:left;"  ng-model="gateinwardregister.challan_no" name="challan_no"/>
+          </div>   
+ </div>    
+ <div class="row small-top" style="margin-left: 10px;">
+                  <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1" ng-init="getSupplierrList();">
+                <label >Supplier Name</label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2 col-lg-2" >
+                <select class="form-control"  name='supplier_name' type="text" ng-model="gateinwardregister.supplier_name" ng-options="i.supplier_name as i.supplier_name for i in supplierList | orderBy : 'supplier_name'"></select>              
+              </div>   
+
+
+
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label>From Date</label>
+                  </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <div class="datepicker"  date-format="dd-MM-yyyy" button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                     <input ng-model="gateoutwardregister.from_date" placeholder="DD-MM-YYYY" name="fromdate" ng-change="DateChecker(recordPurchaseOrderAddition.txtPODate,recordPurchaseOrderAddition.txtDeliveryDate);" />
+                      </div>
+                    </div>
+            
+
+           
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >To Date</label>
+                  </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2"> 
+                      <div class="datepicker"  date-format="dd-MM-yyyy" button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                     <input ng-model="gateoutwardregister.to_date" placeholder="DD-MM-YYYY" name="todate" ng-change="DateChecker(recordPurchaseOrderAddition.txtPODate,recordPurchaseOrderAddition.txtDeliveryDate);" />
+                     </div>
+                  </div>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2" style="color: #0598DD; margin-top: 2px;">
+                  <button class="btn-sm" aria-hidden="true" ng-disabled="form2.$invalid" ng-click="getGateoutwardList(gateoutwardregister.project_id,gateoutwardregister.store_id,gateoutwardregister.challan_no,gateoutwardregister.inventory_type_id,gateoutwardregister.supplier_name,gateoutwardregister.from_date,gateoutwardregister.to_date);" style="width: 70%;">Search</button>
+              </div> 
+
+                </div><br/>
+                </form>
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+      
+  <div class="panel-body">
+  <div class="panel panel-info">
+  <div class="small-top">
+
+    <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-striped table-bordered dt-responsive nowrap">
+        <thead>
+          <tr style="float: center;background-color: #CFD8DC;">     
+            <th class="text-center">Sr.No</th>
+            <th class="text-center">Outward Number</th>
+            <th class="text-center">Outward Date</th>
+            <th class="text-center">Coustomer Name</th>
+            <th class="text-center">Transporter Name</th>
+            <th class="text-center">Vehical No.</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Outward Time</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+         <tr ng-repeat="i in gateoutwardList">            
+            <td>{{ $index + 1 }}</td>
+            <td>{{i.outward_ge_code}}</td>
+            <td>{{i.outward_date}}</td>
+            <td>{{i.customer_name}}</td>
+            <td>{{i.transporter_name}}</td>
+            <td>{{i.vehicle_no}}</td>
+            <td>{{i.status}}</td>
+            <td>{{i.outward_time}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>   
+    </div>
+    </div>
+    </div>
+  </div>
+
+  
+
+

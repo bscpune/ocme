@@ -1,0 +1,127 @@
+<div class="row" ng-hide="addUserForm">
+<div class="panel panel-info">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      User List
+      <button  class="btn-md button btn-default fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.user_fullname.$pristine=true;form2.mobile_number.$pristine=true;form2.email_id.$pristine=true;form2.user_name.$pristine=true;form2.password.$pristine =true;form2.user_role.$pristine=true;form2.dept_id.$pristine=true;showAddUserForm();">Add New User</button>
+    </div>
+  </div>
+    <div class="row table-responsive" >
+    <fieldset class="scheduler-border contain" ng-init="getUserList();" style="margin-right: 18px; margin-left: 15px;">
+
+      <table id="" class="table table-bordered" border="1" fixed-header> 
+        <thead>
+        <tr style="float: center;background-color: #CFD8DC;">
+          <th class="text-center">Sr No</th>
+          <th class="text-center">User Name</th>
+          <th class="text-center">Full Name</th>
+          <th class="text-center">Mobile Number</th>
+          <th class="text-center">User Role</th>
+        </tr>
+        </thead>
+        
+        <tbody>
+        <tr ng-repeat="user in userList">
+          <td>{{ $index + 1 }}</td>
+          <td><a href="" data-toggle="modal" ng-click="getUserDetails(user.user_name)">{{user.user_name}}</a></td>
+          <td class="text-center">{{user.user_fullname}}</td>
+          <td class="text-center">{{user.mobile_number}}</td>
+          <td class="text-center">{{user.user_role}}</td>
+        </tr>
+        </tbody>
+
+      </table>   
+    </fieldset>
+    </div>
+  </div>
+</div>
+
+    
+<div class="panel panel-primary" ng-show="addUserForm">
+  <div class="panel-heading" >
+    Add New User
+  </div>
+   <div class="panel-heading" ng-hide="addUserData">
+    Update User
+   </div>
+  <div class="panel-body">
+  <div class="panel panel-info">
+  <div class="panel-body">
+
+    <div class="row" ng-init="getDepartmentList();getUserRoleList();">
+    <form name="form2" class="form" novalidate>           
+    <fieldset>
+
+      <div class="row small-top">
+      <div class="col-xs-6 col-sm-6 col-md-1">
+        
+          <label>User Name<span style="color:red">*</span></label></div>
+          <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.user_name.$invalid && !form2.user_name.$pristine }">
+          <input type="text" required name="user_name" ng-model="user.user_name" class="form-control ">
+          <span ng-show="!form2.user_name.$pristine && form2.user_name.$invalid" class="help-block label">User Name Required</span>
+        </div>
+
+ <div class="col-xs-6 col-sm-6 col-md-1">
+        
+          <label>Password<span style="color:red">*</span></label></div>
+          <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.password.$invalid && !form2.password.$pristine }">
+          <input type="text" required name="password" ng-model="user.password" class="form-control ">
+          <span ng-show="!form2.password.$pristine && form2.password.$invalid" class="help-block label">User Password Required</span>
+        </div>
+
+ <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>User Role<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.user_role.$invalid && !form2.user_role.$pristine }">
+          <select class="form-control" required name='user_role' type="text" ng-model="user.user_role" ng-options="u.user_role as u.user_role for u in userRoleList | orderBy : 'user_role'"></select>
+          <span ng-show="!form2.user_role.$pristine && form2.user_role.$invalid" class="help-block label">User Role Required</span>
+        </div>
+      </div>
+
+      <div class="row small-top">
+       <div class="col-xs-6 col-sm-6 col-md-1">
+     
+          <label>Full Name<span style="color:red">*</span></label></div>
+             <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.user_fullname.$invalid && !form2.user_fullname.$pristine }">
+          <input type="text" ng-model="user.user_fullname" name="user_fullname" class="form-control" required>
+          <span ng-show="!form2.user_fullname.$pristine && form2.user_fullname.$invalid" class="help-block label">Full Name Required</span>
+        </div>
+
+ <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Mobile Number<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.mobile_number.$invalid && !form2.mobile_number.$pristine }">
+          <input type="text" maxlength="10" required name="mobile_number" ng-model="user.mobile_number" class="form-control ">
+          <span ng-show="!form2.mobile_number.$pristine && form2.mobile_number.$invalid" class="help-block label">Mobile Number Required</span>
+        </div>
+
+ <div class="col-xs-6 col-sm-6 col-md-1">
+       
+          <label>Email Id<span style="color:red">*</span></label></div>
+           <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.email_id.$invalid && !form2.email_id.$pristine }">
+          <input type="text" required name="email_id" ng-model="user.email_id" class="form-control ">
+          <span ng-show="!form2.email_id.$pristine && form2.email_id.$invalid" class="help-block label">Email Id Required</span>
+        </div>
+
+       
+      </div>     
+       
+    </fieldset>
+    </form>
+          
+    <div class="row" >
+    <div align="center">
+      <h2></h2>
+      <button class="btn btn-primary" ng-show="addUserData" ng-click="form2.user_fullname.$pristine=false;form2.mobile_number.$pristine=false;form2.email_id.$pristine=false;form2.user_name.$pristine=false;form2.password.$pristine =false;form2.user_role.$pristine=false;saveUser(!form2.$invalid);">Submit</button>
+      <button class="btn btn-primary" ng-hide="addUserData" ng-click="form2.user_fullname.$pristine=false;form2.mobile_number.$pristine=false;form2.email_id.$pristine=false;form2.user_name.$pristine=false;form2.password.$pristine =false;form2.user_role.$pristine=false;updateUser(!form2.$invalid);">Update</button>
+      <button class="btn btn-danger" ng-click="hideAddUserForm();">Cancel</button>
+    </div>
+    </div>  
+
+    </div> 
+
+  </div>
+  </div>
+  </div>
+</div>
+

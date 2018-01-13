@@ -1,0 +1,124 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" ng-hide="addActivityTransactionForm">
+<div class="panel panel-info">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      Activity Transaction
+      <button  class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click=" form2.project_id.$pristine=true;
+          form2.activity_id.$pristine=true;
+          showAddActivityTransactionForm();">
+      Add New Transaction </button>
+    </div>
+  </div>
+  <div class="row small-top">
+    <div class="col-xs-6 col-sm-6 col-md-7">
+    </div>
+       </div>
+  <div class="row small-top table-responsive">
+  <fieldset class="scheduler-border contain" ng-init="getActivityTransactionList();" style="margin-right: 18px; margin-left: 15px;">
+    <table id="exportHODash" class="table table-bordered" border="1" fixed-header> 
+      <thead>
+        <tr>
+          <th class="text-center">Sr. No.</th>
+          <th class="text-center">Project Name<input type="text" name="project_name" tooltip="Enter Project Name" ng-model="search.project_name" class="form-control"/></th>
+          <th class="text-center">Activity Name<input type="text" name="activity_name" tooltip="Enter Activity Name" ng-model="search.activity_name" class="form-control"/></th>
+          <th class="text-center">Status<input type="text" name="active_status_display" tooltip="Enter Activity Status" ng-model="search.active_status_display" class="form-control"/></th>
+          <th class="text-center">Action</th>   
+       </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="activity in activityTransactionList | filter: search">
+          <td>{{ $index + 1 }}</td>
+          <td>{{activity.project_name}}</td>
+          <td>{{activity.activity_name}}</td>
+          <td>{{activity.active_status_display}}</td>
+          <td><button class="btn btn-xs btn-info"
+           ng-click="getActivityTransactionDetails(activity.activity_transaction_id);"><i class="glyphicon glyphicon-edit"></i></button>
+ <button id="active" class="btn btn-xs btn-success" ng-show="activity.active_status==0;" ng-click="deleteActivityTransaction(activity.activity_transaction_id,activity.active_status);"><i class="glyphicon glyphicon-trash"></i></button>
+         <button id="deactive" class="btn btn-xs btn-danger"  ng-show="activity.active_status==1;" ng-click="deleteActivityTransaction(activity.activity_transaction_id,activity.active_status);"><i class="glyphicon glyphicon-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>   
+  </fieldset>
+  </div>
+</div>
+</div>
+
+<div class="row" dw-loading="loader" ng-show="addActivityTransactionForm">
+  <div class="panel panel-primary" >
+    <div class="panel-heading" ng-show="addActivityTransactionData">
+      Add New Activity Transaction
+    </div>
+    <div class="panel-heading" ng-hide="addActivityTransactionData">
+      Update Activity Transaction
+    </div>
+
+    <div class="panel-body">
+    <div class="panel panel-info">
+    <div class="panel-body">
+
+    <div  class="row" ng-init="getProjectNameList();getActivityNameList();">
+      <form name="form2" class="form" novalidate>           
+        <fieldset>
+          <legend><font style="color: #0598DD;">Activity Details</font></legend>
+          <div class="row small-top" style="margin-left: 10px;">
+            <div class="col-xs-6 col-sm-6 col-md-1">
+              <label >Project Name<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+              <select class="form-control" required name='project_id' type="text" ng-model="activityTransaction.project_id" ng-options="s.project_id as s.project_name for s in projectNameList | orderBy : 'project_name'" ng-change="getStoreName(activityTransaction.project_id);"></select>
+              <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">project Name Required</span>
+            </div>            
+              <div class="col-xs-6 col-sm-6 col-md-1 clo-lg-1">
+                  <label >Store Name<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 clo-lg-3" ng-class="{ 'has-error' : form2.store_id.$invalid && !form2.store_id.$pristine }">
+                  <select class="form-control"  name='store_id' type="text" ng-model="activityTransaction.store_id" ng-options="s.store_id as s.store_name for s in storeNameList | orderBy : 'store_name'" ng-change="getSiteNameList(activityTransaction.store_id);" ></select>
+                  <span ng-show="!form2.store_id.$pristine && form2.store_id.$invalid" class="help-block label">Store Name Required</span>
+                </div>
+
+                <div class="col-xs-6 col-sm-6 col-md-1 clo-lg-1">
+                <label > Site Name<span style="color:red">*</span></label>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-2 clo-lg-3" ng-class="{ 'has-error' : form2.site_master_main_id.$invalid && !form2.site_master_main_id.$pristine }">
+                <select class="form-control"  name='site_master_main_id' type="text" ng-model="activityTransaction.site_master_main_id" ng-options="i.site_master_main_id as i.site_name for i in siteNameList | orderBy : 'site_name'"></select>
+                <span ng-show="!form2.site_master_main_id.$pristine && form2.site_master_main_id.$invalid" class="help-block label">Site Location Required</span>
+              </div>
+
+              <div class="col-xs-6 col-sm-6 col-md-1">
+          <label >Acivity<span style="color:red">*</span></label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.activity_id.$invalid && !form2.activity_id.$pristine }">
+          <select type="text" required name="activity_id" ng-model="activityTransaction.activity_id" class="form-control" ng-options="b.activity_id as b.activity_name for b in activityNameList | orderBy : 'activity_name'"></select>
+          <span ng-show="!form2.activity_id.$pristine && form2.activity_id.$invalid" class="help-block label">Acivity Name Required</span>
+        </div>
+            </div>
+    </fieldset>
+      <div class="row" >
+        <div  align="center">
+          <h2></h2>
+          <button ng-show="addActivityTransactionData" class="btn btn-primary" ng-click="form2.project_id.$pristine=false;
+          form2.activity_id.$pristine=false;
+          saveActivityTransaction(!form2.$invalid);">Submit</button>
+          <button ng-hide="addActivityTransactionData"  class="btn btn-primary" ng-click="form2.project_id.$pristine=false;
+          form2.activity_id.$pristine=false;
+          updateActivityTransaction(!form2.$invalid);">Update</button>
+          <button class="btn btn-danger" ng-click="hideAddActivityTransactionForm();">Cancel</button>
+        </div>
+      </div>
+       </form>
+    </div>        
+    </div>
+    </div>
+    </div>
+  </div>
+</div>

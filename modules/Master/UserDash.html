@@ -1,0 +1,214 @@
+<div class="row" ng-init="getRoleList()">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+       Dashboard
+    </div>
+                
+    <div class="panel panel-info" >
+    <div class="panel-body" ng-init="getDashboardCount();getAdminDashboardCount();">
+                  
+      <div class="row" >
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-aqua">
+            <div class="inner">
+              <h3>{{getDashProjectCount}}</h3>
+
+              <p>Total Project</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-tasks "></i>
+            </div>
+             <a href="" ui-sref="home.ProjectMaster" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-green">
+            <div class="inner">
+            <h3>{{gettotal_sites}}</h3>
+
+              <p>Total Site</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-globe"></i>
+            </div>
+             <a href="" ui-sref="home.SiteMaster" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-yellow">
+            <div class="inner">
+              <h3>5</h3>
+
+              <p> Active Site </p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-check"></i>
+            </div>
+             <a href="" ui-sref="home.SiteMaster" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-red">
+            <div class="inner">
+              <h3>{{getgetUserCount}}</h3>
+
+              <p>Total User</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-user"></i>
+            </div>
+            <a href="" ui-sref="home.AddUserList" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+      </div>
+
+    </div>
+    </div>
+    
+  </div>
+
+  <div class="row" >
+    <section class="col-lg-6 connectedSortable">
+          <!-- Custom tabs (Charts with tabs)-->
+          <div class="box box-solid ">
+            <div class="box-header with-border">
+              <i class="fa fa-th"></i>
+
+              <h3 class="box-title">Project Status Pie Chart</h3>
+
+              
+            <div class="box-body border-radius-none">
+              <div class="chart" id="myPieChart" style="height: 300px;"></div>
+            </div>
+            <!-- /.box-body -->
+          
+            <!-- /.box-footer -->
+          </div>
+        </div>
+
+          <!-- /.nav-tabs-custom -->
+
+          <!-- Chat box -->
+          <div class="box box-success">
+            <div class="box-header with-border">
+              <h3 class="box-title">Material Consumption Graph</h3>
+            </div>
+            <div class="box-body chart-responsive">
+              <div class="chart" id="top_x_div" style="height: 300px; width: 400"></div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box (chat box) -->
+          <div ></div>
+
+        </section>
+
+        <section class="col-lg-6 connectedSortable">
+          <!-- Custom tabs (Charts with tabs)-->
+          
+
+          <!-- /.nav-tabs-custom -->
+
+          <!-- Chat box -->
+          <div class="box box-success">
+            <div class="box-header with-border">
+              <h3 class="box-title">Project Activity Graph</h3>
+            </div>
+            <div class="box-body chart-responsive">
+              <div class="chart" id="curve_chart" style="width: 600px; height: 500px"></div>
+            </div>
+            <!-- /.box-body -->
+          </div>
+
+        </section>
+
+  </div>
+</div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load('current', {packages: ['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+      // Define the chart to be drawn.
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Project');
+      data.addColumn('number', 'Percentage');
+      data.addRows([
+        ['Project1', 0.68],
+        ['Project2', 0.21],
+        ['Project3', 0.10]
+      ]);
+
+      // Instantiate and draw the chart.
+      var chart = new google.visualization.PieChart(document.getElementById('myPieChart'));
+      chart.draw(data, null);
+    }
+  </script>
+
+  <script type="text/javascript">
+   google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawStuff);
+
+      function drawStuff() {
+        var data = new google.visualization.arrayToDataTable([
+          ['Inventory', 'Percentage'],
+          ["Emco Material ", 40],
+          ["OSM Material ", 31],
+          ["T & P Material ", 25],
+          ["Customer Material", 70],
+
+        ]);
+
+        var options = {
+          title: 'Material Consumption Graph',
+          width: 550,
+          legend: { position: 'none' },
+          chart: { title: 'Material Consumption Graph',
+                   },
+          bars: 'vertical', // Required for Material Bar Charts.
+          axes: {
+            x: {
+              0: { side: 'top', label: 'Percentage'} // Top x-axis.
+            }
+          },
+          bar: { groupWidth: "70%" }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+        chart.draw(data, options);
+      };
+  </script>
+
+  <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Activity'],
+          ['2014',  400],
+          ['2015',  460],
+          ['2016',  1120],
+          ['2017',  540]
+        ]);
+
+        var options = {
+          title: 'Project Activity Graph',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+      }
+    </script>

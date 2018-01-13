@@ -1,0 +1,246 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary" >
+
+  <div class="panel-heading" ng-show="viewReturnList" >
+   Material Return By Contractor
+    <button class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.material_issue_date.$pristine=true;form2.contractor_id.$pristine=true;form2.reference_no.$pristine=true;form2.project_id.$pristine=true;form2.store_id.$pristine=true;form2.inventory_type.$pristine=true;returnMaterial();">New Entry</button>
+  </div>
+
+  <div class="panel-body" ng-init="getMaterialreturnList();" ng-show="viewReturnList" >
+  <div class="panel panel-info" >
+    <div class="row">
+      <br/>
+    <div class="col-xs-6 col-sm-6 col-md-9" style="padding-left: 20px;">
+    </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+        <label><i class="glyphicon glyphicon-search"></i>Search</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input type="text" name="Search" ng-model="searchKeyword" class="form-control"/>
+      </div>
+      
+  </div>
+  <div class="small-top">
+
+    <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+        <thead>
+          <tr>     
+            <th class="text-center">Sr No</th>
+            <th class="text-center">Material Return No</th>
+            <th class="text-center">Material Return Date</th>
+            <th class="text-center">Contractor Name</th>
+            <th class="text-center">Project Name</th>
+            <th class="text-center">Site Name</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr ng-repeat="issue in returnList | filter: searchKeyword">     
+          <td>{{$index+1}}</td>  
+          <td><a href="" ng-click="getReturnDetails(issue.material_return_code);">{{issue.material_return_code}}</a></td>
+          <td>{{issue.material_return_date}}</td>
+          <td>{{issue.contractor_name}}</td>
+          <td>{{issue.project_name}}</td>
+          <td>{{issue.site_name}}</td> 
+          </tr>
+        </tbody>
+      </table>   
+    </div>
+    
+  </div>
+  </div>
+  </div>
+
+  <div class="panel-heading" ng-show="showIssueList">
+   Material Consumption Approved List
+    <button class="btn-md button button1 fa fa-user-plus" aria-hidden="true" ng-click="hideIssueList();" >Back</button>
+  </div>
+   <div class="panel-heading" ng-show="materialReturn">
+   Material Return By Contractor
+  </div>
+  <div class="panel-body" ng-init="getMaterialIssueList();getMaterialConsumptionList();">
+ <div class="panel panel-info" ng-show="viewList">
+    <div class="row">
+      <br/>
+    <div class="col-xs-6 col-sm-6 col-md-9" style="padding-left: 20px;">
+    </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+        <label><i class="glyphicon glyphicon-search"></i>Search</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input type="text" name="Search" ng-model="searchKeyword" class="form-control"/>
+      </div>
+      
+  </div>
+  <div class="small-top">
+
+    <div class="table-responsive">
+     <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+            <thead>
+              <tr>     
+               
+                <th class="text-center">Material Consumption Code</th>
+                <th class="text-center">Contractor Name</th>
+                 <th class="text-center">Status</th>
+               
+              </tr>
+            </thead>
+            <tbody class="text-center">
+              <tr ng-repeat="consumption in consumptionList1 | filter: searchKeyword">     
+              
+                <td><a href="" ng-click="getMaterialConsumptionDetails(consumption.material_consumption_code);getMaterialReturnCode();">{{consumption.material_consumption_code}}</a></td>
+                <td>{{consumption.contractor_name}}</td>
+               <td>{{consumption.approve_reject_status}}</td>
+              </tr>
+            </tbody>
+          </table>   
+    </div>
+    
+  </div>
+  </div>
+  </div>
+
+
+
+  <!-- <div class="panel-heading" ng-show="addNewEntryForm">
+   New Entry
+  </div>
+ -->
+ <div ng-show="viewUpdateField1">
+  <div class="panel panel-info">
+  <div class="row small-top" ng-init="">
+<div class="col-xs-6 col-sm-6 col-md-1">
+        <label>Material Consumption Code</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input class="form-control" ng-disabled="true" ng-model="consumptionheader.material_consumption_code" name="material_consumption_code"/>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-1" >
+      <label >Project Name</label>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-2" >
+     <input class="form-control" ng-disabled="true" ng-model="consumptionheader.project_name" name="project_name"/>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-1">
+      <label >Site Name</label>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-2" >
+    <input class="form-control" ng-disabled="true" ng-model="consumptionheader.site_name" name="store_name"/>
+    </div> </div>
+    <div class="row small-top" ng-init="">
+    <div class="col-xs-6 col-sm-6 col-md-1">
+      <label >Activity Name</label>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-2" >
+    <input class="form-control" ng-disabled="true" ng-model="consumptionheader.activity_name" name="store_name"/>
+    </div>
+      <div class="col-xs-6 col-sm-6 col-md-1" >
+        <label >Contractor Name</label>
+      </div>
+       <div class="col-xs-6 col-sm-6 col-md-2" >
+      <input class="form-control" ng-disabled="true" ng-model="consumptionheader.contractor_name" name="contractor_name"/>  
+      </div>
+       </div>
+       <hr>
+<div class="row small-top" ng-init="">
+      <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Material Return Date<span style="color:red">*</span></label>
+        </div>
+       <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.material_return_date.$invalid && !form2.material_return_date.$pristine }">
+                <div class="datepicker" date-format="dd-MM-yyyy"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                  <input ng-model="consumptionheader.material_return_date" placeholder="DD-MM-YYYY" type="text" class="form-control angular-datepicker-input" required name="material_return_date" />
+                  <span ng-show="!form2.material_return_date.$pristine && form2.material_return_date.$invalid" class="help-block label">return Date Required</span>
+                </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Material Return No</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" class="form-control" style="text-align: left;" required ng-model="consumptionheader.material_return_code" ng-disabled="true" name="material_return_code"/>
+        </div>
+    </div>
+    <br/>
+  <br/>
+    </div>
+    
+      <div ng-hide="addNewEntryForm">
+
+      <div class="col-xs-6 col-sm-6 col-md-9" style="padding-left: 20px;">
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+          <label><i class="glyphicon glyphicon-search"></i>Search</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" name="Search" ng-model="searchKeyword"/>
+        </div> 
+          <table dt-options="dtOptions" class="table table-bordered">
+            <thead>
+              <tr>     
+                <th class="text-center">Sr No</th>
+                    <th class="text-center">Material Issue Number</th>
+                    <th class="text-center">Location Number</th>
+                    <th class="text-center">Material Number</th>                    
+                    <th class="text-center">Material Description</th>
+                    <th class="text-center">UOM</th>
+                    <th class="text-center">Issued Quantity</th>
+                    
+                    <th class="text-center">Consumed Quantity</th>
+                      <th class="text-center">Balance Quantity</th>
+                       <th class="text-center">Return Quantity</th>
+                        <th class="text-center">Reason Of Return</th>
+              </tr>
+            </thead>
+            <tbody class="text-center">
+              <tr ng-repeat="consumption in consumptionheaderList | filter: searchKeyword">    
+                    <td>{{$index+1}}</td>
+                     <td>{{consumption.material_issue_number}}</td>
+                    <td>{{consumption.loc_no}}</td>
+                     <td>{{consumption.material_name}}</td>
+                    <td>{{consumption.material_description}}</td>
+                    <td><span >{{consumption.unit_of_measurment}}</span></td>
+                    <td>{{consumption.issued_qty}}</td>
+                      
+                       <td><span >{{consumption.actual_quantity}}</span></td>
+  <td ng-bind="consumption.issued_qty - consumption.actual_quantity"><span >{{consumption.balance_qty}}</span></td>
+                     <td>
+                     <input class="form-control table-input" type="text" ng-model="consumption.return_qty" data-ng-required onkeypress="return isNumberKey(event)"/></td>
+                     <td><select class="form-control" ng-model="consumption.reason_return" required name="reason_return">
+                     <option>Excess</option>
+                     <option>Unused</option>
+                     <option>Damaged</option>
+                     <option>Scrap</option>
+                     <option>Other</option>
+          </select></td>
+                       <!-- <td ng-bind="consumption.issued_qty - consumption.actual_quantity"><span >{{consumption.balance_qty}}</span> -->
+
+                  </tr>            </tbody>
+          </table>   
+        </div>
+<div class="row small-top" style="margin-left: 300px;">
+             <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                  <label>Remark<span style="color:red">*</span></label>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.remark.$invalid && !form2.remark.$pristine }">
+                  <TEXTAREA rows="3" cols="40"  type="text" style="width:400px" maxlength="30" name="remark" class="form-control" required ng-model="consumptionheader.remarksReturn"/>
+                  <span ng-show="!form2.remark.$pristine && form2.remark.$invalid" class="help-block label">Remarks Required</span>
+                </div></div>
+                <hr>
+<div align="center" >
+ <button class="btn btn-primary"
+      ng-click="saveMaterialReurn(!form2.$invalid);" ng-hide="returnSubmit">Submit</button>
+<button class="btn btn-danger" ng-click="hideConsumptionForm();">Cancel</button>
+ <button class="btn btn-info"  ng-click="genrateMaterialconsumptionPDF(consumption.material_consumption_code);">Print</button>
+</div>
+       </div>
+       
+
+</div>
+</div>

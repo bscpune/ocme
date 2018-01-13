@@ -1,0 +1,275 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary" >
+
+  <div class="panel-heading" ng-show="viewReturnList" >
+   Material Return By Store
+    <button class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.material_issue_date.$pristine=true;form2.contractor_id.$pristine=true;form2.reference_no.$pristine=true;form2.project_id.$pristine=true;form2.store_id.$pristine=true;form2.inventory_type.$pristine=true;returnMaterialStore();">New Entry</button>
+  </div>
+
+  <div class="panel-body" ng-init="getMaterialStoreReturnList();" ng-show="viewReturnList" >
+  <div class="panel panel-info" >
+    <div class="row">
+      <br/>
+    <div class="col-xs-6 col-sm-6 col-md-9" style="padding-left: 20px;">
+    </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+        <label><i class="glyphicon glyphicon-search"></i>Search</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input type="text" name="Search" ng-model="searchKeyword" class="form-control"/>
+      </div>
+      
+  </div>
+  <div class="small-top">
+
+    <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+        <thead>
+          <tr>     
+            <th class="text-center">Sr No</th>
+            <th class="text-center">Material Return No</th>
+            <th class="text-center">Material Rejected Return No</th>
+            <!-- <th class="text-center">Material Return Date</th> -->
+            <th class="text-center">Project Name</th>
+            <th class="text-center">Store Name</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr ng-repeat="issue in returnList1 | filter: searchKeyword">     
+          <td>{{$index+1}}</td>  
+          <td><a href="" ng-click="getReturnDetailsForStore(issue.mrr_id);">{{issue.return_no}}</a></td>
+           <td><a href="" ng-click="getReturnDetailsForStore(issue.mrr_id);">{{issue.rejected_return_no}}</a></td>
+          <!-- <td>{{issue.material_return_date}}</td> -->
+          <td>{{issue.project_name}}</td>
+          <td>{{issue.store_name}}</td> 
+          </tr>
+        </tbody>
+      </table>   
+    </div>
+    
+  </div>
+  </div>
+  </div>
+
+  <div class="panel-heading" ng-show="showIssueList" ng-hide="hideThis">
+   MRR List
+    <button class="btn-md button button1 fa fa-user-plus" aria-hidden="true" ng-click="hideIssueStoreList();" >Back</button>
+  </div>
+  <div class="panel-body" ng-init="getMRRStoreList();">
+  <div class="panel panel-info" ng-show="showIssueList" ng-hide="hideThis">
+    <div class="row">
+      <br/>
+    <div class="col-xs-6 col-sm-6 col-md-9" style="padding-left: 20px;">
+    </div>
+        <div class="col-xs-6 col-sm-6 col-md-1">
+        <label><i class="glyphicon glyphicon-search"></i>Search</label>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-2">
+        <input type="text" name="Search" ng-model="searchKeyword" class="form-control"/>
+      </div>
+      
+  </div>
+  <div class="small-top">
+
+    <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-bordered dt-responsive nowrap">
+        <thead>
+          <tr>     
+            <th class="text-center">Sr No</th>
+            <th class="text-center">MRR Number</th>        
+            <th class="text-center">Inventory Type</th>
+            <th class="text-center">Total Quantity</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+          <tr ng-repeat=" mr in mrrStoreList | filter: searchKeyword">     
+          <td>{{$index+1}}</td> 
+          <td><a href="" ng-click="getMrrDetails1(mr.mrr_id);">{{mr.mrr_code}}</a></td>
+              <td>{{mr.inventory_type_id}}</td>
+              <td>{{mr.total_quantity}}</td>
+          </tr>
+        </tbody>
+      </table>   
+    </div>
+    
+  </div>
+  </div>
+  </div>
+
+    <div class="panel-body" ng-show="addStoreForm">
+      <div class="panel panel-info">
+        <form name="form2" class="form" novalidate>
+          
+          <div class="row small-top">
+
+          <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Material Return No</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" class="form-control" style="text-align: left;" ng-model="mrr.return_no" ng-disabled="true" name="return_no"/>
+        </div>
+
+          <div class="col-xs-6 col-sm-6 col-md-1">
+          <label>Rejected Return No</label>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-2">
+          <input type="text" class="form-control" style="text-align: left;" ng-model="mrr.rejected_return_no" ng-disabled="true" name="rejected_return_no"/>
+        </div>
+
+            <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+              <label >Material Type</label>
+            </div>
+        <div>
+          <select class="form-control" style="width: 100px;" ng-model="mrr.return_material_type" ng-change="getMaterialReturnCodeStore(mrr.return_material_type);" required name="return_material_type" ng-disabled="viewUpdateButton1">
+                     <option value="1">Return</option>
+                     <option value="2">Rejected</option>
+                     <option value="3">Scrap</option>
+          </select>
+        </div>
+      </div>
+              <fieldset>
+                <legend><font style="color: #0598DD;">MRR Details</font></legend>
+                  <div class="row small-top" style="margin-left: 10px;">
+
+                    <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                      <label>MRR Number<span style="color:red">*</span></label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3">
+                      <input type="text" style="text-align: left;" name="mrr_code" ng-model="mrr.mrr_code" class="form-control" readonly/>
+                    </div>
+                  </div>
+
+                  <div class="row small-top" style="margin-left: 10px;">
+              
+                    <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1" ng-init="getProjectNameList()">
+                     <label >Project Name</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+                    <select class="form-control" style="text-align: left;" style="text-align: left;" required name='project_id' type="text" ng-model="mrr.project_id" ng-options="i.project_id as i.project_name for i in projectNameList | orderBy : 'project_name'" ng-change=getProjectNameList(mrr.project_id); " ng-disabled="viewUpdateButton1"></select>
+                <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">Project Name Required</span>
+                    </div>
+
+              <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1" ng-init="getStoreNameList();">
+              <label >Store Name<span style="color:red">*</span></label>
+             </div>
+                <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.store_id.$invalid && !form2.store_id.$pristine }">
+                <select class="form-control" style="text-align: left;" required name='store_id' type="text" ng-model="mrr.store_id" ng-options="i.store_id as i.store_name for i in storeNameList | orderBy : 'project_name'" ng-disabled="viewUpdateButton1"></select>
+                <span ng-show="!form2.store_id.$pristine && form2.store_id.$invalid" class="help-block label">Store Name Required</span>
+       </div>  
+
+               <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+               <label>Inventory Type<span style="color:red">*</span>:</label>
+               </div>
+                  <div class="col-xs-6 col-sm-6 col-md-3" ng-class="{ 'has-error' : form2.inventory_type_id.$invalid && !form2.inventory_type_id.$pristine }">
+                      <input class="form-control" required name='inventory_type_id' type="text" ng-model="mrr.inventory_type_id" ng-disabled="viewUpdateButton1">
+                       <span ng-show="!form2.inventory_type_id.$pristine && form2.inventory_type_id.$invalid" class="help-block label">Inventory Type Required</span> 
+                    </div>
+
+                  </div>
+
+                  <div class="row small-top" style="margin-left: 10px;">
+
+                    <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                      <label >Supplier Name</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3">
+                      <input type="text" name="supplier_name" ng-model="mrr.supplier_name" class="form-control" ng-disabled="viewUpdateButton1">
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                      <label>Supplier Invoice No.<span style="color:red">*</span>:</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.supplier_invoice_no.$invalid && !form2.supplier_invoice_no.$pristine }">
+                      <input type="text" required name="supplier_invoice_no" class="form-control" ng-model="mrr.supplier_invoice_no" ng-disabled="viewUpdateButton1">
+                      <span ng-show="!form2.supplier_invoice_no.$pristine && form2.supplier_invoice_no.$invalid" class="help-block label">Address Required</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                      <label>Location of Dispatch:</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.location_of_despatch.$invalid && !form2.location_of_despatch.$pristine }">
+                      <input class="form-control" type="text"  name="location_of_despatch" ng-model="mrr.location_of_despatch" ng-disabled="viewUpdateButton1">
+                       <span ng-show="!form2.location_of_despatch.$pristine && form2.location_of_despatch.$invalid" class="help-block label">Location of Dispatch</span>
+                    </div>
+  
+                  </div>
+
+                  <div class="row small-top" style="margin-left: 10px;">
+                  <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                     <label >Transportor Name<span style="color:red">*</span>:</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.transporter_name.$invalid && !form2.transporter_name.$pristine }">
+                      <input class="form-control" required name='transporter_name' type="text" ng-model="mrr.transporter_name" ng-disabled="viewUpdateButton1">
+                       <span ng-show="!form2.transporter_name.$pristine && form2.transporter_name.$invalid" class="help-block label">Location of Dispatch</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                      <label>Vehicle No.<span style="color:red">*</span>:</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3" ng-class="{ 'has-error' : form2.vehicle_no.$invalid && !form2.vehicle_no.$pristine }">
+                      <input type="text" class="form-control" ng-model="mrr.vehicle_no" required name="vehicle_no" ng-disabled="viewUpdateButton1"/>  
+
+                       <span ng-show="!form2.vehicle_no.$pristine && form2.vehicle_no.$invalid" class="help-block label">Location of Dispatch</span>             
+                    </div>
+                    </div>
+
+                  <div class="row small-top" style="margin-left: 10px;">
+                    <div class="col-xs-6 col-sm-6 col-md-1 col-lg-1">
+                        <label>Remarks</label>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2 col-lg-3">
+                      <textarea class="form-control" type="text" name="remark" ng-model="mrr.remark" ng-disabled="viewUpdateButton1"></textarea>
+                    </div>
+                  </div>
+
+
+     <div class="table-responsive small-top" ng-init="getMaterialCodeList1();">
+      <table id="exportCreateIndent" class="table table-striped table-bordered" border="1">
+        <thead>
+        <tr style="float: center;background-color: #CFD8DC;">     
+          <th class="text-center">Sr No</th>
+          <th class="text-center">Material Number</th>
+          <th class="text-center">Material Name</th>
+          <th class="text-center">Rejected Quantity</th>
+          <th class="text-center">Return Quantity</th>
+          <th class="text-center">Reason Of Rejection</th>
+       </tr>
+        </thead>
+        <tbody class="text-center">
+        <tr ng-repeat="ind in materialList1">
+          <td>{{$index+1}}</td>
+          <td>{{ind.material_code}}</td>
+          <td>{{ind.material_name}}</td>
+          <td>{{ind.rejected_quantity}}</td>
+          <td><input type="text" class="form-control" required ng-model="ind.return_qty" name="constraction_name"  onkeypress="return isNumberKey(event)" ng-change="checkQuantity1(ind.rejected_quantity,ind.return_qty)"/></td>
+          <td>{{ind.reason_for_rejection}}</td>
+        </tr>
+        </tbody>
+      </table>   
+    </div>
+
+    <div class="row" >
+    <div align="center">
+      <h2></h2>
+      <button class="btn btn-primary" ng-hide="viewUpdateButton1"
+                      ng-click="saveMrrReturn(!form2.$invalid);">Submit</button>
+    
+                      <button class="btn btn-danger" ng-hide="viewUpdateButton1" ng-click="hideReturnBYStore();">Cancel</button>
+                      <button class="btn btn-danger" ng-show="viewUpdateButton1" ng-click="hideForm1();">Cancel</button>
+                      <button class="btn btn-info"  ng-click="genrateReturnbystorePDF(mrr.mrr_id);">Print</button>
+    </div>
+        </div>
+  </div>
+  </form>
+  
+  </div>
+  </div>
+
+</div>
+</div>

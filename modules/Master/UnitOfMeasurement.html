@@ -1,0 +1,116 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" ng-hide="addUOMForm">
+<div class="panel panel-info">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      UOM Master
+      <button  class="btn-md button button1 fa fa-user-plus pull-right" aria-hidden="true" ng-click="form2.uom_name.$pristine=true;form2.uom_description.$pristine=true; showAddUOMForm();">Add New UOM</button>
+    </div>
+  </div>
+  <div class="row small-top">
+    <div class="col-xs-6 col-sm-6 col-md-7">
+      <!--<button class="btn btn-link" ng-click="exportToExcel('#table','CustomerDetailsFile')">
+      <span class="fa fa-file-excel-o"></span>Export to Excel
+      </button>
+    </div>-->
+    </div>
+
+     <div class="col-xs-6 col-sm-6 col-md-1">
+        <label>Search By</label>
+      </div>
+       <div class="col-xs-6 col-sm-6 col-md-2">
+        <select class="form-control" ng-model="columns" ng-options="e for e in headers" ng-click="getValue8();">
+        </select>
+      </div>
+       <div class="col-xs-6 col-sm-6 col-md-2">
+      <input type="text" name="Search" ng-model="search[columns]" placeholder="Search Here" class="form-control"/>
+      </div>
+      </div>
+  <div class="row small-top table-responsive">
+  <fieldset class="scheduler-border contain" ng-init="getUOMList();" style="margin-right: 18px; margin-left: 15px;">
+    <table id="exportHODash" class="table table-bordered" border="1" fixed-header> 
+      <thead>
+        <tr>
+          <th class="text-center">Sr. No.</th>
+          <th class="text-center">Unit Of Measurement Name</th>
+          <th class="text-center">Unit Of Measurement Description</th>
+        <!--   <th class="text-center">Action</th>  -->  
+       </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="uom in uomList | filter: search">
+          <td>{{ $index + 1 }}</td>
+          <td>{{uom.uom_name}}</td>
+          <td>{{uom.uom_description}}</td>
+         <!--  <td><button class="btn btn-xs btn-info" ng-click="getUOMDetails(uom.uom_id);"><i class="glyphicon glyphicon-edit"></i></button>
+          <button class="btn btn-xs btn-danger" ng-click="deleteUOM(uom.uom_id);"><i class="glyphicon glyphicon-trash"></button></td> -->
+        </tr>
+      </tbody>
+    </table>   
+  </fieldset>
+  </div>
+</div>
+</div>
+
+<div class="row" dw-loading="loader" ng-show="addUOMForm">
+  <div class="panel panel-primary" >
+    <div class="panel-heading" ng-show="addUOMData">
+      Add New UOM
+    </div>
+    <div class="panel-heading" ng-hide="addUOMData">
+      Update UOM
+    </div>
+
+    <div class="panel-body">
+    <div class="panel panel-info">
+    <div class="panel-body">
+
+    <div  class="row" ng-init="">
+      <form name="form2" class="form" novalidate>           
+        <fieldset>
+          <legend><font style="color: #0598DD;">UOM Details</font></legend>
+          <div class="row small-top" style="margin-left: 10px;">
+    
+            <div class="col-xs-6 col-sm-6 col-md-1">
+              <label >UOM Name<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3" ng-class="{ 'has-error' : form2.uom_name.$invalid && !form2.uom_name.$pristine }">
+              <input type="text" required name="uom_name" ng-model="uom.uom_name" class="form-control">
+              <span ng-show="!form2.uom_name.$pristine && form2.uom_name.$invalid" class="help-block label">UOM Name Required</span>
+            </div>
+            
+            <div class="col-xs-6 col-sm-6 col-md-1">
+              <label>UOM Description<span style="color:red">*</span></label>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-3" ng-class="{ 'has-error' : form2.uom_description.$invalid && !form2.uom_description.$pristine }">
+              <input type="text" required name="uom_description" ng-model="uom.uom_description" class="form-control">
+              <span ng-show="!form2.uom_description.$pristine && form2.uom_description.$invalid" class="help-block label">UOM Description Required</span>
+            </div>
+            </div>
+
+        </fieldset>
+      
+      <div class="row" >
+        <div  align="center">
+          <h2></h2>
+          <button ng-show="addUOMData" class="btn btn-primary" ng-click="form2.uom_name.$pristine=false;form2.uom_description.$pristine=false;saveUOM(!form2.$invalid);">Submit</button>
+          <button ng-hide="addUOMData"  class="btn btn-primary" ng-click="form2.uom_name.$pristine=false;form2.uom_description.$pristine=false;updateUOM(!form2.$invalid);">Update</button>
+          <button class="btn btn-danger" ng-click="hideAddUOMForm();">Cancel</button>
+        </div>
+      </div><br>
+      </form>
+
+    </div>        
+    </div>
+    </div>
+    </div>
+  </div>
+</div>

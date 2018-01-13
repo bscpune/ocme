@@ -1,0 +1,146 @@
+<script>
+  function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+      return false;
+    return true;
+  }    
+</script>
+
+<div class="row" dw-loading="loader">
+<div class="panel panel-primary" >
+
+  <div class="panel-heading">
+    Inward Register
+  </div><br/>
+
+  <div class="panel-body">
+    <div class="row" ng-init="getProjectNameList();getStoreNameList();getMaterialNameList();">
+          <div class="row">
+            <form name="dateForm">
+              <div class="row small-top" style="margin-left: 10px;">
+                  <div class="col-xs-6 col-sm-6 col-md-1" ng-init="getProjectNameList();">
+                    <label >Project Name</label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+                    <select class="form-control" required name='project_id' type="text" ng-model="inwardregister.project_id" ng-options="s.project_id as s.project_name for s in projectNameList | orderBy : 'project_name'" ng-change="getInwardList(inwardregister.project_id)"></select>
+                    <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">project Name Required</span>
+                  </div>
+
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >Store Name</label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.store_id.$invalid && !form2.store_id.$pristine }">
+                    <select class="form-control" required name='store_id' type="text" ng-model="inwardregister.store_id" ng-options="s.store_id as s.store_name for s in storeNameList | orderBy : 'store_name'" ng-change="getInwardList(inwardregister.store_id)"></select>
+                    <span ng-show="!form2.store_id.$pristine && form2.store_id.$invalid" class="help-block label">project Name Required</span>
+                  </div>
+
+                  <div class="col-xs-6 col-sm-6 col-md-1" >
+                    <label>Stock Type</label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" >
+                   <select class="form-control" ng-model="inwardregister.inventory_type" ng-disabled="Invoicedetails" name="stock_type" required>
+                     <option>Emco Stock</option>
+                     <option>Customer Stock</option>
+                     <option>T&P Stock</option>
+                     <option>OSM Stock</option>
+                  </select> 
+                  </div>
+          
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >Material Name</label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.material_id.$invalid && !form2.material_id.$pristine }">
+                    <select class="form-control" required name='material_id' type="text" ng-model="inwardregister.material_id" ng-options="s.material_id as s.material_name for s in materialNameList | orderBy : 'material_name'" ng-change="getInwardList(inwardregister.material_id)"></select>
+                    <span ng-show="!form2.material_id.$pristine && form2.material_id.$invalid" class="help-block label">material Name Required</span>
+                  </div>
+              </div>    
+
+              <div class="row small-top" style="margin-left: 10px;">
+                  <!-- <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >Party Name</label>
+                  </div>
+                  <div class="col-xs-6 col-sm-6 col-md-2" ng-class="{ 'has-error' : form2.project_id.$invalid && !form2.project_id.$pristine }">
+                    <select class="form-control" required name='project_id' type="text" ng-model="inwardregister.project_id" ng-options="s.project_id as s.project_name for s in projectNameList | orderBy : 'project_name'"></select>
+                    <span ng-show="!form2.project_id.$pristine && form2.project_id.$invalid" class="help-block label">party Name Required</span>
+                  </div> -->
+
+
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label>From Date</label>
+                  </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2">
+                      <div class="datepicker"  date-format="yyyy-MM-dd"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                     <input ng-model="report.from_date" placeholder="yyyy-MM-dd" name="fromdate" ng-change="DateChecker(recordPurchaseOrderAddition.txtPODate,recordPurchaseOrderAddition.txtDeliveryDate);" required type="text" class="form-control angular-datepicker-input" required tooltip="{{(dateForm.fromdate.$invalid) ?  'Date required.' : ''}}"/>
+                      </div>
+                    </div>
+            
+
+           
+                  <div class="col-xs-6 col-sm-6 col-md-1">
+                    <label >To Date</label>
+                  </div>
+                    <div class="col-xs-6 col-sm-6 col-md-2"> 
+                      <div class="datepicker"  date-format="yyyy-MM-dd"  button-prev='<i class="fa fa-arrow-circle-left"></i>' button-next='<i class="fa fa-arrow-circle-right"></i>'>
+                     <input ng-model="report.to_date" placeholder="yyyy-MM-dd" name="todate" ng-change="DateChecker(recordPurchaseOrderAddition.txtPODate,recordPurchaseOrderAddition.txtDeliveryDate);" required type="text" class="form-control angular-datepicker-input" required tooltip="{{(dateForm.todate.$invalid) ?  'Date required.' : ''}}"/>
+                     </div>
+                  </div>
+              
+              <div class="col-xs-6 col-sm-6 col-md-2" style="color: #0598DD; margin-top: 2px;">
+                  <button class="btn-sm" aria-hidden="true" ng-disabled="form2.$invalid" ng-click="getInwardList();" style="width: 70%;">Search</button>
+              </div> 
+
+                </div><br/>
+                </form>
+                </div>
+
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+      
+  <div class="panel-body" ng-init="getInwardList()" >
+  <div class="panel panel-info">
+  <div class="small-top">
+
+    <div class="table-responsive">
+      <table dt-options="dtOptions" class="table table-striped table-bordered dt-responsive nowrap">
+        <thead>
+          <tr style="float: center;background-color: #CFD8DC;">     
+           <th class="text-center">SR.NO</th>
+            <th class="text-center">Inword Date</th>
+            <th class="text-center">Inv./Challan NO</th>
+            <th class="text-center">Party Name </th>
+            <th class="text-center">Material Name</th>
+            <th class="text-center">Challan QTY</th>
+            <th class="text-center">Received QTY</th>
+            <th class="text-center">Shortage/ Excess</th>
+            <th class="text-center">Rejection Quantity</th>
+            <th class="text-center">Reason For Rejection</th>
+            <th class="text-center">Store Supervisor Name</th>
+          </tr>
+        </thead>
+        <tbody class="text-center">
+         <tr ng-repeat="i in inwardList">            
+            <td>{{ $index + 1 }}</td>
+            <td>{{i.time_in}}</td>
+            <td>{{i.challan_no}}</td>
+            <td>{{i.transporter_name}}</td>
+            <td>{{i.material_name}}</td>
+            <td></td>
+            <td>{{i.accepted_quantity}}</td>
+            <td></td>
+            <td>{{i.rejected_quantity}}</td>
+            <td>{{i.reason_for_rejection}}</td>
+            <td>{{i.store_supervisor_name}}</td>
+          </tr>
+        </tbody>
+      </table>   
+    </div>
+    </div>
+    </div>
+  </div>
+
+  
